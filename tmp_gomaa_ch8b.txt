@@ -1,0 +1,949 @@
+104 Software Modeling
+
+                                                                                          Account
+
+                                                                              accountNumber: Integer
+                                                                              balance: Real
+
+                                                                                                                          1
+                                                                                                                              Modified by
+
+                                                                                                                          * {ordered by time}
+
+                                                                                    ATMTransaction
+
+                                                                                 transactionId: Integer
+                                                                                 cardId: Integer
+                                                                                 PIN: String
+                                                                                 date: Date
+                                                                                 time: Time
+                                                                                 status: Integer
+
+                                   Figure 7.17. Example of ordering in an association
+
+        7.5.1 Static Modeling of the Problem Domain
+
+         In static modeling of the problem domain, the initial emphasis is on modeling phys-
+         ical classes and entity classes. Physical classes are classes that have physical char-
+         acteristics ­ that is, they can be seen and touched. Such classes include physical
+         devices (which are often part of the problem domain in embedded applications),
+         users, external systems, and timers. Entity classes are conceptual data-intensive
+         classes that are often persistent ­ that is, long-living. Entity classes are particularly
+         prevalent in information systems (e.g., in a banking application, examples include
+         accounts and transactions).
+
+             In embedded systems, in which there are several physical devices such as sensors
+         and actuators, class diagrams can help with modeling these real-world devices. For
+         example, in the Banking System, in which the ATM is an embedded subsystem, it
+         is useful to model real-world devices, their associations, and the multiplicity of the
+         associations. Composite classes are often used to show how a real-world class is
+         composed of other classes (e.g., the ATM depicted in Figure 7.18).
+
+             Consider the static model of the problem domain for the banking application. A
+         bank provides a service for several ATMs, as shown on Figure 7.18. Each ATM is a
+         composite class consisting of a Card Reader, a Cash Dispenser, a Receipt Printer, and an
+         ATM Customer Keypad Display. The ATM Customer actor inserts the card into the Card
+         Reader and interacts though the ATM Customer Keypad Display. The Cash Dispenser
+         dispenses cash to the ATM Customer actor. The Receipt Printer prints a receipt for
+         the ATM Customer actor. The physical entities represent classes in the problem
+         domain for which there will need to be a conceptual representation in the software
+         system. These decisions are made during object and class structuring, as described
+         in Chapter 8. In addition, the Operator actor is a user whose job is to maintain
+         the ATM.
+
+        7.6 STATIC MODELING OF THE SYSTEM CONTEXT
+
+         It is very important to understand the scope of a computer system ­ in particular,
+         what is to be included inside the system and what is to be left outside the system.
+                                                                          Static Modeling 105
+
+                                           Bank
+
+                                                      1
+                     Provides service for
+
+                                                     1..*
+
+                                           ATM             1     Maintains
+                                                                           1
+
+                                                                              ATM Operator
+
+            1        1                                        1                        1
+                                                                           ReceiptPrinter
+ATMCustomer          CardReader                            CashDispenser
+KeypadDisplay                                                                     1
+                                        1                     1           Prints receipt for
+                  1
+
+                     Inserts card into     Dispenses cash to
+
+Interacts through
+
+                                                1             1
+                                           1                         1
+
+                                                                                       ATM Customer
+
+           Figure 7.18. Conceptual static model for Banking System
+
+Context modeling explicitly identifies what is inside the system and what is outside.
+Context modeling can be done at the total system (hardware and software) level
+or at the software system (software only) level. A diagram that explicitly shows the
+border between the system (hardware and software), which is treated as a black box,
+and the external environment is called a system context diagram. A diagram that
+explicitly shows the border between the software system, also treated as a black
+box, and the external environment (which now includes the hardware) is called a
+software system context diagram. These views of the border around the system are
+more detailed than those usually provided by a use case diagram.
+
+    In developing the system context diagram, it is helpful to consider the context of
+the total hardware/software system (i.e., both hardware and software) before con-
+sidering the context of the software system. This is particularly useful in situations in
+which hardware/software tradeoffs need to be made. In considering the total hard-
+ware/software system, only users (i.e., human actors) and external systems are out-
+side the system. I/O devices are part of the hardware of the system and therefore
+appear inside the total system.
+
+    As an example, consider the total hardware/software system for the Banking
+System. From a total hardware/software system perspective, the ATM Customer and
+ATM Operator actors, shown in Figure 7.18, are outside the system, as shown in Figure
+7.19. All the others entities shown in Figure 7.18, in particular the I/O devices, which
+include the card reader, cash dispenser, receipt printer, and the ATM Customer
+keypad/display, are part of the total hardware/software system (Figure 7.19).
+
+    From the total system perspective ­ that is, both hardware and software ­ the
+ATM Customer and ATM Operator actors are external to the system, as shown in
+106 Software Modeling
+
+                                        Interacts              «system»    Interacts
+                                    1..* with 1                Banking       with
+                                                                System
+                         ATM                                               1 1..*
+                       Customer
+                                                                                           ATM
+                                                                                         Operator
+
+Figure 7.19. Banking hardware/software system context class diagram
+
+Figure 7.19. The ATM Operator interacts with the system via a keypad and display.
+The ATM Customer actor interacts with the system via four I/O devices, which are
+the card reader, cash dispenser, receipt printer, and ATM Customer keypad/display.
+From a total hardware/software system perspective, these I/O devices are part of the
+system. From a software perspective, the I/O devices are external to the software
+system. On the software system context class diagram, the I/O devices are modeled
+as external classes, as shown on Figure 7.20.
+
+    The software system context class diagram can be determined by static mod-
+eling of the external classes that connect to the system. In particular, the physi-
+cal classes described in the previous section are often I/O devices that are exter-
+nal classes to the software system. Alternatively, the software system context class
+diagram can be determined from the use cases by considering the actors and what
+devices they use to interface to the system. Both approaches are described in
+Section 7.8.
+
+7.7 CATEGORIZATION OF CLASSES USING UML STEREOTYPES
+
+The dictionary definition of category is "a specifically defined division in a system
+of classification." In class structuring, the COMET method advocates categoriz-
+ing classes in order to group together classes with similar characteristics. Whereas
+classification based on inheritance is an objective of object-oriented modeling, it is
+
+                       CardReader                  1..*
+
+                  1
+
+                                   Inputs                      Outputs
+                                     to                           to
+
+1                 1                                 Outputs 1                       Interacts       1 ATM
+                       ReceiptPrinter 1..* to 1                                       with               Operator
+
+   1                                                                                1 1..*          1
+
+               1                                   Interacts               Banking                 Operator
+                                                     with 1                System
+         1
+  ATM                  1 ATMCustomer 1..*                      1
+Customer
+                       KeypadDisplay
+
+                                                               Outputs to
+
+                                                         1..*
+                       1
+
+                               CashDispenser
+
+Figure 7.20. Banking software system context class diagram
+                                                           Static Modeling 107
+
+«external I/O device»  «external output device»  «entity»
+     CardReader              ReceiptPrinter      Account
+
+                       «external output device»  «entity»
+                            CashDispenser        Customer
+
+Figure 7.21. Example of UML classes and their stereotypes
+
+essentially tactical in nature. Thus, classifying the Account class into a Checking
+Account and a Savings Account is a good idea because Checking Account and Sav-
+ings Account have some attributes and operations in common and others that differ.
+Categorization, however, is a strategic classification ­ a decision to organize classes
+into certain groups because most software systems have these kinds of classes and
+because categorizing classes in this way helps to better understand the system being
+developed.
+
+    In UML, stereotypes are used to distinguish among the various kinds of classes.
+A stereotype is a subclass of an existing modeling element (e.g., an application or
+external class) that is used to represent a usage distinction (e.g., the kind of applica-
+tion or external class). In the UML notation, a stereotype is enclosed by guillemets,
+like this: «entity». In software applications, a class is categorized by the role it plays
+in the application. Application classes are categorized according to their role in the
+application, such as «entity» class or «boundary» class, as will be described in
+Chapter 8. External classes are categorized on the basis of their characteristics in
+the external environment, such as «external system» or «external user», as will be
+described in Section 7.8.
+
+    Examples shown in Figure 7.21 from the Banking System are the external I/O
+device Card Reader, the external output devices Cash Dispenser and Receipt Printer,
+and the entity classes Account and Customer.
+
+7.8 MODELING EXTERNAL CLASSES
+
+Using the UML notation for the static model, the system context is depicted showing
+the hardware/software system as an aggregate class with the stereotype «system»,
+and the external environment is depicted as external classes to which the system has
+to interface, as shown in Figure 7.19. In the case of a software system, the context
+is depicted showing the software system as an aggregate class with the stereotype
+«software system», and the external environment is depicted as external classes to
+which the software system has to interface, as shown in Figure 7.20.
+
+    Figure 7.22 shows the classification of external classes, which are categorized by
+stereotype (see Section 7.7); thus, stereotypes are used to distinguish among the
+various kinds of external classes. In Figure 7.22, each box represents a different
+category of external class, and the relationships between them are inheritance rela-
+tionships. Thus, an external class is classified as an «external user» class, an «external
+device» class, an «external system» class, or an «external timer» class. Only exter-
+nal users and external systems are actually external to the total system. Hardware
+devices and timers are part of the total system but are external to the software
+108 Software Modeling
+
+                                  «external class»
+
+«external user»        «external         «external system»  «external timer»
+                       device»
+
+«external input        «external output  «external input /
+    device»                 device»      output device»
+
+Figure 7.22. Classification of external classes by stereotype
+
+system; thus, Figure 7.22 classifies external classes from the perspective of the soft-
+ware system.
+
+    As depicted in Figure 7.22, an external device is classified further as follows:
+
+ External input device. A device that only provides input to the system ­ for
+    example, a sensor
+
+ External output device. A device that only receives output from the system ­ for
+    example, an actuator
+
+ External I/O device. A device that both provides input to the system and receives
+    output from the system ­ for example, an ATM card reader
+
+    A human user often interacts with the software system by means of standard I/O
+devices such as a keyboard/display and mouse. The characteristics of these standard
+I/O devices are of no interest because they are handled by the operating system.
+The interface to the user is of much greater interest in terms of what information
+is being output to the user and what information is being input by the user. For
+this reason, an external user interacting with the software system via standard I/O
+devices is depicted as an «external user».
+
+    A general guideline is that a human user should be represented as an external
+user class only if the user interacts with the system via standard I/O devices. On the
+other hand, if the user interacts with the software system via application-specific I/O
+devices, these I/O devices should be represented as external device I/O classes.
+
+    For a real-time embedded system, it is desirable to identify low-level external
+classes that correspond to the physical I/O devices to which the software system
+must interface. These external classes are depicted with the stereotype «external
+I/O device». Examples are the Arrival Sensor external input device and the Motor
+external output device in the Automated Guided Vehicle System.
+
+    An «external system» class is needed when the system interfaces to other sys-
+tems, to either send data or receive data. Thus, in the Automated Guided Vehi-
+cle System, the software system interfaces to two external systems: the Supervisory
+System and the Display System.
+
+    An «external timer» class is used if the application needs to keep track of time
+and/or if it needs external timer events to initiate certain actions in the system.
+External timer classes are most frequently needed in real-time systems. An example
+                                                                                                   Static Modeling 109
+
+from the Automated Guided Vehicle System is the Clock. It is needed because the
+software system needs external timer events to initiate various periodic activities.
+Sometimes the need for periodic activities only becomes apparent during design.
+
+    The associations between the software system aggregate class and the external
+classes are depicted on the software system context class diagram, showing in partic-
+ular the multiplicity of the associations. The standard association names on software
+system context class diagrams are Inputs to, Outputs to, Communicates with, Inter-
+acts with, and Signals. These associations are used as follows:
+
+         external input device» Inputs to « software system»
+         «software system» Outputs to «external output device»
+         «external user» Interacts with « software system»
+         «external system» Communicates with « software system»
+         «external timer» Signals « software system»
+
+Examples of associations on software system context class diagrams are as follows:
+
+         Card Reader Inputs to Banking System
+         Banking System Outputs to Cash Dispenser
+         Operator Interacts with Banking System
+         Supervisory System Communicates with Automated Guided Vehicle System
+         Clock Signals Automated Guided Vehicle System
+
+7.8.1 Examples of Developing a Software System Context Class
+Diagram from External Classes
+
+An example of a software system context class diagram is shown in Figure 7.20,
+which shows the external classes to which the Banking System has to interface.
+The external classes are determined directly from the static model of the problem
+domain as described previously. Furthermore, the external classes are categorized
+by stereotype, as described next.
+
+    In this example, three of these I/O devices are categorized as external device
+classes: the Card Reader, the Receipt Printer, and the Cash Dispenser. The ATM Cus-
+tomer Keypad/Display external class is categorized as an external user class because
+it is a standard I/O device. The Operator external class is also categorized as an
+external user class for the same reason. Because there is one instance of each of
+these external classes for each ATM and there are many ATMs, there is a one-to-
+many association between each external class and the Banking System. The software
+system context class diagram in which external classes are depicted using stereo-
+types is shown in Figure 7.23. Depicting the external class stereotype explicitly on
+the software system context class diagram visually describes the role played by each
+external class of the system. Thus, it is immediately obvious which classes represent
+external output devices and which classes represent external users.
+
+    Another example of a software system context class diagram is given for the
+Automated Guided Vehicle System, which is shown in Figure 7.24. This software
+110 Software Modeling
+
+                            «external I/O
+
+                            device»                 1..*
+
+                      1     CardReader
+
+                                                 Inputs   Outputs
+                                                   to        to
+
+                                                      Outputs 1                                              1         ATM
+                                                 1..* to
+                               «external output                                                                 Operator
+                                    device»                         1
+1                     1                                                                                      1
+                                ReceiptPrinter
+   1                                                                                              Interacts
+                            1 «external user»                                                       with
+                                  ATMCustomer     Interacts            «software system»                     «external user»
+                                 KeypadDisplay      with 1                   Banking              1 1..*        Operator
+                                                                             System
+                   1                             1..*
+                                                                 1
+           1
+
+  ATM
+Customer
+
+                                                                    Outputs to
+
+                                                    1..*
+
+                         1  «external output
+
+                            device»
+
+                            CashDispenser
+
+Figure 7.23. Banking System software context class diagram with stereotypes
+
+system has six external classes: there are two external systems (Supervisory System
+and Display System), one external input device (Arrival Sensor), two external output
+devices (Robot Arm and Motor), and one external timer (Clock).
+
+7.8.2 Actors and External Classes
+
+Consider next how to derive the software system context class diagram by analyz-
+ing the actors that interact with the system. Actors are a more abstract concept
+than external classes. The relationship between actors and external classes is as
+follows:
+
+ An I/O device actor is equivalent to an external I/O device class. This means the
+    I/O device actor interfaces to the system via an external I/O device class.
+
+ An external system actor is equivalent to an external system class.
+
+«external system»                                                                                    «external output
+                                                                                                          device»
+   Supervisory              1 Communicates with                                                1
+     System                                                                     Outputs to              RobotArm
+
+                                                    1 «software 1
+
+   «external input          1 Inputs to             1      system»
+       device»                                            Automated
+
+   ArrivalSensor                                 1        Guided Vehicle        1 Outputs to
+                                                               System
+
+                                                               1                                  1  «external output
+                            Signals                                                                       device»
+                                                                                                           Motor
+                         1                                           Communicates with
+   «external timer»                                                 1
+
+         Clock
+
+                                                          «external system»
+                                                                Display
+                                                                System
+
+Figure 7.24. Automated Guided Vehicle System software system con-
+text class diagram with external class stereotypes
+                                                                                                   Static Modeling 111
+
+ A timer actor interfaces to the system via an external timer class, which provides
+    timer events to the system.
+
+ A human user actor has the most flexibility. In the simplest case, the user actor
+    interfaces to the system via standard user I/O devices, such as keyboard, visual
+    display, and mouse. The external class is given the name of its user actor because
+    what is of interest is the logical information coming from the user. However, in
+    more complex use cases, it is possible for a human actor to interface with the
+    system through a variety of external classes. An example of this is the customer
+    actor in the Banking System, in which the actor interfaces with the system via
+    several external I/O devices, as described in Section 7.8.3.
+
+7.8.3 Example of Developing a Software System Context Class
+Diagram from Actors
+
+In order to determine the external classes from the actors, it is necessary to under-
+stand the characteristics of each actor and how each actor interacts with the system,
+as described in the use cases. Consider a situation in which all the actors are human
+users. In the Banking System, there are two actors, both of whom are human users:
+the ATM Customer and the ATM Operator, as shown in the system context class dia-
+gram of Figure 7.19.
+
+    Figure 7.23 shows the software system context class diagram for the Banking
+System, with the Banking System as one aggregate class and external classes that
+interface to it. The ATM operator actor interfaces to the system via a standard user
+I/O device and so is depicted as an «external user» class called Operator, because in
+this case the user's characteristics are more important than those of the I/O devices.
+However, the customer actor actually interfaces to the system via one standard
+user I/O device representing the keyboard/display and three application-specific I/O
+devices. The application-specific I/O devices are an «external I/O device», the Card
+Reader, and two «external output devices», the Receipt Printer and the Cash Dispenser.
+These five external classes all have one-to-many associations with the Banking
+System.
+
+7.9 STATIC MODELING OF ENTITY CLASSES
+
+Entity classes are conceptual data-intensive classes ­ that is, their main purpose
+is to store data and provide access to this data. In many cases, entity classes are
+persistent, meaning that the data is long-living and would need to be stored in a
+file or database. Whereas some approaches advocate static modeling of all soft-
+ware classes during analysis, the COMET approach emphasizes static modeling of
+entity classes, in order to take advantage of the strengths of the static modeling nota-
+tion for expressing classes, attributes, and relationships among classes. Entity classes
+are particularly prevalent in information systems; however, many real-time and dis-
+tributed systems have significant data-intensive classes. Concentrating on modeling
+entity classes is similar to modeling a logical database schema. Entity classes are
+often mapped to a database in the design phase, as described in Chapter 15.
+
+    The main difference between object-oriented static modeling and entity-
+relationship modeling, which is frequently used for logical database design, is that
+whereas both approaches model classes, attributes of each class, and relationships
+112 Software Modeling
+
+«entity»                       Uses          «entity»     Authorizes                   «entity»
+Customer               1             1 CustomerAccount 1                           DeliveryOrder
+                                                                        1..*
+
+*
+
+      Views                                                                   1..*
+1
+
+                     1                  Described in                    1..*  «entity»
+«entity»
+Catalog                                                                          Item
+
+1                                                                             0..1
+
+                                                                                    Stored in
+
+                       Provides
+
+                                                                              1
+
+                                        «entity»             Maintains        «entity»
+                                                                              Inventory
+                                     *  Supplier
+                                                          1             1..*
+
+Figure 7.25. Entity class model for online shopping application
+
+among classes, object-oriented static modeling also allows class operations to be
+specified. During static modeling of the problem domain, the COMET emphasis is
+on determining the entity classes that are defined in the problem, their attributes,
+and their relationships. Specifying operations is deferred until design modeling, as
+described in Chapter 14. Static modeling of entity classes is referred to as entity
+class modeling.
+
+    One example of entity class modeling comes from an online shopping applica-
+tion, in which customers, accounts, and catalogs are all mentioned in the problem
+description. Each of these real-world conceptual entities is modeled as an entity
+class and depicted with the stereotype «entity». The attributes of each entity class
+are determined, and the relationships among the entity classes are defined.
+
+    The example of an entity class model for the online shopping application is
+shown in Figure 7.25. Because this static model depicts only entity classes, all the
+classes have the «entity» stereotype to depict the role they play in the application.
+Figure 7.25 shows the Customer entity class, which has a one-to-one association with
+the Customer Account class, which in turn has a one-to-many association with the
+Delivery Order class. The latter class is an aggregation of the Item class, which in turn
+has a many-to-one association with the Catalog class (in which the item is described)
+and an optional association with Inventory (in which the item is stored; the zero is
+because the inventory may be out of a specific item). This example is described in
+more detail in the Online Shopping System case study (Chapter 22).
+
+7.9.1 Modeling Class Attributes
+
+An important consideration in modeling entity classes is to define the attributes
+of each entity class. An entity class is data-intensive, meaning that it has several
+attributes. If an entity class appears to have only one attribute, then it is question-
+able whether it really is an entity class. Instead, it is more likely that this doubtful
+entity should be modeled as an attribute of a different class.
+                                                          Static Modeling 113
+
+               «entity»                      «entity»                   «entity»
+           DeliveryOrder                    Customer                      Item
+
+orderId : Integer              customerId : Integer       itemId : Integer
+orderStatus : OrderstatusType  customerName : String      unitCost : Real
+accountId : Integer            address : String           quantity : Integer
+amountDue: Real                telephoneNumber : String
+supplierId : Integer           faxNumber : String                            «entity»
+creationDate : Date            email : EmailType                             Supplier
+plannedShipDate : Date                                         supplierId : Integer
+actualShipDate : Date                         «entity»         supplierName: String
+paymentDate: Date                              Catalog         address : String
+                                                               telephoneNumber : String
+                «entity»        itemId : Integer               faxNumber : String
+               Inventory        itemDescription : String       email : EmailType
+                                unitCost : Real
+  itemID : Integer              supplierId : Integer
+  itemDescription : String      itemDetails : linkType
+  quantity : Integer
+  price : Real
+  reorderTime : Date
+
+                                                                                                                    «entity»
+                                                                                                              CustomerAccount
+
+                                                                                                         accountId : Integer
+                                                                                                         cardId : String
+                                                                                                         cardType : String
+                                                                                                         expirationDate: Date
+
+Figure 7.26. Entity class attributes for online shopping application
+
+    Consider the attributes of the entity classes that are shown in Figure 7.26. Each
+class has several attributes that provide information that distinguishes this class from
+other classes. Furthermore, each instance of the class has specific values of these
+attributes to differentiate it from other instances of the class. Thus, the Customer
+class is characterized by attributes that describe the information needed to identify
+an individual customer, including a customer Id, the customer's name, address, tele-
+phone number, fax number, and email address. On the other hand, the Customer
+Account class contains attributes that provide details of the account.
+
+7.10 SUMMARY
+
+This chapter described some of the basic concepts of static modeling, includ-
+ing the relationships between classes. Three types of relationships have been
+described: associations, composition/aggregation relationships, and generalization/
+specialization relationships. In addition, this chapter described how static modeling
+is used to model the structural views of the problem domain. This consists of static
+modeling of the total system context, which depicts the classes external to the total
+hardware/software system; static modeling of the software system context, which
+depicts the classes external to the software system; and static modeling of the entity
+classes, which are conceptual data-intensive classes.
+
+    Static modeling of the solution domain is deferred to the design phase. Although
+static modeling also includes defining the operations of each class, it is easier
+to determine the operations of a class after dynamic modeling. Because of this,
+114 Software Modeling
+
+         determining the operations of a class is deferred to class design, as described in
+         Chapter 14.
+
+EXERCISES                                      6. What is a generalization/specialization
+                                                   hierarchy?
+Multiple-choice questions: For each ques-          (a) A whole/part relationship
+tion, choose one of the answers.                   (b) An inheritance relationship
+                                                   (c) An association between a general-
+ 1. What is a class?                                     ized class and a specialized class
+     (a) A course                                  (d) A layered hierarchy
+     (b) An object instance
+     (c) A client or server in the system      7. What is a composition hierarchy?
+     (d) A collection of objects with the          (a) A weak form of a generalization/
+           same characteristics                          specialization hierarchy
+                                                   (b) A strong form of a generalization/
+ 2. What is an attribute?                                specialization hierarchy
+     (a) A relationship between two classes        (c) A weak form of a whole/part rela-
+     (b) A parameter of an operation or                  tionship
+           method                                  (d) A strong form of a whole/part rela-
+     (c) A data value held by an object in a             tionship
+           class
+     (d) The return value from an operation    8. What is an aggregation hierarchy?
+                                                   (a) A weak form of a generalization/
+ 3. What is an association?                              specialization hierarchy
+     (a) A relationship between two classes        (b) A strong form of a generaliza-
+     (b) A relationship between two objects              tion/specialization hierarchy
+     (c) A link between two classes                (c) A weak form of a whole/part rela-
+     (d) A link between two objects                      tionship
+                                                   (d) A strong form of a whole/part rela-
+ 4. What is meant by the multiplicity of an              tionship
+     association?
+     (a) The number of associations in a       9. What does the system context class dia-
+           class                                   gram define?
+     (b) The number of associations be-            (a) The entity classes in the system
+           tween two classes                       (b) How the system interfaces to other
+     (c) How many instances of one class                 systems
+           relate to how many instances of         (c) The boundary between the system
+           another class                                 and the external environment
+     (d) How many instances of one class           (d) The context classes in the system
+           relate to a single instance of
+           another class.                     10. What is an entity class?
+                                                   (a) A class on an entity/relationship
+ 5. What is an association class?                        diagram
+     (a) A class with multiple associations        (b) A class that stores data
+     (b) A class with one association              (c) A class that interfaces to an exter-
+     (c) A class that models an association              nal entity
+           between two or more classes             (d) An external class
+     (d) A class that models an association
+           between two or more objects
+  8
+
+Object and Class Structuring
+
+After defining the use cases and developing a static model of the problem domain,
+the next step is to determine the software objects in the system. At this stage,
+the emphasis is on software objects that model real-world objects in the problem
+domain.
+
+    Software objects are determined from the use cases and from the static model
+of the problem domain. This chapter provides guidelines on how to determine the
+objects in the system. Object structuring criteria are provided, and the objects are
+categorized by using stereotypes. The emphasis is on problem domain objects to be
+found in the real world and not on solution domain objects, which are determined
+at design time.
+
+    The static modeling described in Chapter 7 was used to determine the exter-
+nal classes, which were then depicted on a software system context class diagram.
+These external classes are used to help determine the software boundary classes,
+which are the software classes that interface to and communicate with the external
+environment. The entity classes and their relationships were also determined dur-
+ing static modeling. In this chapter, the objects and classes needed in the software
+system are determined and categorized. In particular, the focus is on the additional
+software objects and classes that were not determined during the static modeling of
+the problem domain.
+
+    The static relationship between classes is considered in the static model, as
+described in the previous chapter, and the dynamic relationship between the objects
+is considered in the dynamic model, as described in Chapters 9, 10, and 11.
+
+    Section 8.1 gives an overview of object and class structuring, and Section 8.2
+describes modeling application classes and objects. Section 8.3 presents an overview
+of object and class structuring categories. Section 8.4 describes external classes
+(first introduced in Chapter 7) and their relationship to software boundary classes,
+whereas Section 8.5 describes the different kinds of boundary classes and objects.
+Section 8.6 describes entity classes and objects, which were first introduced in
+Chapter 7. Section 8.7 describes the different kinds of control classes and objects.
+Section 8.8 describes application logic classes and objects.
+
+                                                                                                                             115
+116 Software Modeling
+
+        8.1 OBJECT AND CLASS STRUCTURING CRITERIA
+
+         There is no one unique way to decompose a system into objects, because the deci-
+         sions made are based on the judgment of the analyst and the characteristics of the
+         problem. Whether objects are in the same class or in a different class depends on
+         the nature of the problem. For example, in an automobile catalog, cars, vans, and
+         trucks might all be objects of the same class. For a vehicle manufacturer, however,
+         cars, vans, and trucks might all be objects of different classes. The reason for this
+         might be that for an automobile catalog, the same type of information is needed
+         for each vehicle, whereas for the vehicle manufacturer, more detailed information
+         is needed, which is different for the different types of vehicles.
+
+             Object and class structuring criteria are provided to assist the designer in struc-
+         turing a system into objects. The approach used for identifying objects is to look
+         for real-world objects in the problem domain and then design corresponding soft-
+         ware objects that model the real world. After the objects have been identified, the
+         interactions among objects are depicted in the dynamic model on communication
+         diagrams or sequence diagrams, as described in Chapters 9 and 11.
+
+        8.2 MODELING APPLICATION CLASSES AND OBJECTS
+
+         Section 7.9 described static modeling of entity classes, which benefit most from
+         static modeling in the analysis phase because they are information-intensive. Entity
+         classes, however, are only one kind of software class within the system. Before
+         dynamic modeling can be undertaken, as described in Chapters 9, 10, and 11, it is
+         necessary to determine what software classes and objects are needed to realize each
+         use case. Identification of software objects and classes can be greatly assisted by
+         applying object and class structuring criteria, which provide guidance on structuring
+         an application into objects. This approach categorizes software classes and objects
+         by the roles they play in the application.
+
+             In this step, classes are categorized in order to group together classes with simi-
+         lar characteristics. Figure 8.1 shows the categorization of application classes. Stereo-
+         types (see Section 7.7) are used to distinguish among the various kinds of application
+
+                     «application class»
+
+         «boundary»           «entity»    «control»                                 «application
+                                                                                       logic»
+
+«user    «device     «proxy»  «timer»   «state dependent  «coordinator»  «business  «algorithm» «service»
+                                             control»                      logic»
+interaction» I/O»
+
+«input»  «output»    «input/
+                     output»
+
+Figure 8.1. Classification of application classes by stereotype
+                                                                                  Object and Class Structuring 117
+
+classes. Because an object is an instance of a class, an object has the same stereotype
+as the class from which it is instantiated. Thus, the categorization described in this
+section applies equally to classes and objects.
+
+    In Figure 8.1, each box represents a different category of application class, and
+the relationships between them are inheritance relationships. Therefore, an appli-
+cation class is classified as an entity class, a boundary class, a control class, or an
+application logic class. These stereotypes are classified further, as shown in Figure
+8.1 and described here.
+
+    This classification process is analogous to classifying books in a library, with
+major classes such as fiction and nonfiction, and further classification of fiction into
+classics, mysteries, adventure, and so on, and nonfiction into biography, autobiogra-
+phy, travel, cooking, history, and other categories. It is also analogous to the taxon-
+omy of the animal kingdom, which is divided into major categories (mammal, bird,
+fish, reptile, and so on) that are further divided into subclasses (e.g., cat, dog, and
+monkey are subclasses of mammal).
+
+8.3 OBJECT AND CLASS STRUCTURING CATEGORIES
+
+Objects and classes are categorized according to the roles they play in the applica-
+tion. There are four main object and class structuring categories, as shown in Figure
+8.1: boundary objects, entity objects, control objects, and application logic objects.
+Most applications will have objects from each of the four categories. However, dif-
+ferent types of applications will have a greater number of classes in one or other
+category. Thus, information-intensive systems will have several entity classes, which
+is why static modeling is so vital for these systems. On the other hand, real-time sys-
+tems are likely to have several device I/O boundary classes to interface to the various
+sensors and actuators. They are also likely to have complex state-dependent control
+classes because these systems are highly state-dependent. These object structuring
+categories are summarized in the following list and described in detail in Sections
+8.4 through 8.7.
+
+    The four main object and class structuring categories (Figure 8.1) are as
+follows:
+
+    1. Entity object. A software object, in many cases persistent, which encapsulates
+        information and provides access to the information it stores. In some case, an
+        entity object could be accessed via a service object.
+
+    2. Boundary object. Software object that interfaces to and communicates with
+        the external environment. Boundary objects are further categorized as:
+        r User interaction object. Software object that interacts with and interfaces
+           to a human user.
+        r Proxy object. Software object that interfaces to and communicates with an
+           external system or subsystem.
+        r Device I/O boundary object. Software object that receives input from
+           and/or outputs to a hardware I/O device.
+
+    3. Control object. Software object that provides the overall coordination for
+        a collection of objects. Control objects may be coordinator objects, state-
+        dependent control objects, or timer objects.
+118 Software Modeling
+
+             4. Application logic object. Software object that contains the details of the
+                 application logic. Needed when it is desirable to hide the application logic
+                 separately from the data being manipulated because it is considered likely
+                 that the application logic could change independently of the data. For infor-
+                 mation systems, application logic objects are usually business logic objects,
+                 whereas for real-time, scientific, or engineering applications, they are usually
+                 algorithm objects. Another category is service objects, which provide services
+                 for client objects, typically in service-oriented architectures and applications.
+
+             In most cases, what category an object fits into is usually obvious. However, in
+         some cases, it is possible for an object to satisfy more than one of the aforemen-
+         tioned criteria. For example, an object could have characteristics of both an entity
+         object, in that it encapsulates some data, and an algorithm object, in that it executes
+         a significant algorithm. In such cases, allocate the object to the category it seems to
+         fit best. Note that it is more important to determine all the objects in the system than
+         to be unduly concerned about how to categorize a few borderline cases.
+
+             For each object structuring criterion, there is an object behavioral pattern, which
+         describes how the object interacts with its neighboring objects. It is useful to under-
+         stand the object's typical pattern of behavior, because when this category of object
+         is used in an application, it is likely to interact with the same kinds of neighboring
+         objects in a similar way. Each behavioral pattern is depicted on a UML communi-
+         cation diagram.
+
+        8.4 EXTERNAL CLASSES AND SOFTWARE BOUNDARY CLASSES
+
+         As described in Section 7.8, external classes are classes that are outside the software
+         system and that interface to the system. Boundary classes are classes inside the sys-
+         tem that interface to and communicate with the external classes. To help determine
+         the boundary classes in the system, it is necessary to consider the external classes to
+         which they are connected.
+
+             Identifying the external classes that communicate with and interface to the
+         system helps identify some of the classes in the system itself, namely, the boundary
+         classes. Each of the external classes communicates with a boundary class in the
+         system. There is usually a one-to-one association between the external class (assum-
+         ing it has been identified correctly) and the internal boundary class with which it
+         communicates. External classes interface to software boundary classes as follows:
+
+           An external user class interfaces to and interacts with a user interaction class.
+           An external system class interfaces to and communicates with a proxy class.
+           An external device class provides input to and/or receives output from a device
+
+             I/O boundary class. Continuing with this classification:
+              r An external input device class provides input to an input class.
+              r An external output device class receives output from an output class.
+              r An external I/O device class provides input to and receives output from an I/O
+
+                class.
+           An external timer class signals to a software timer class.
+                                                                                  Object and Class Structuring 119
+
+    An external device class represents an I/O device type. An external I/O device
+object represents a specific I/O device, that is, an instance of the device type. In
+the next section, we consider the internal objects that interface to and communicate
+with the external objects.
+
+8.5 BOUNDARY CLASSES AND OBJECTS
+
+This section describes the characteristics of the three different kinds of boundary
+objects: user interaction objects, proxy objects, and device I/O boundary objects. In
+each case, an example is given of a boundary class, followed by an example of a
+behavioral pattern in which an instance of the boundary class, that is, a boundary
+object, communicates with neighboring objects in a typical interaction sequence.
+
+8.5.1 User Interaction Objects
+
+A user interaction object communicates directly with the human user, receiving
+input from the user and providing output to the user via standard I/O devices such as
+the keyboard, visual display, and mouse. Depending on the user interface technol-
+ogy, the user interface could be very simple (such as a command line interface) or
+it could be more complex (such as a graphical user interface [GUI] object). A user
+interaction object may be a composite object composed of several simpler user inter-
+action objects. This means that the user interacts with the system via several user
+interaction objects. Such objects are depicted with the «user interaction» stereotype.
+
+    An example of a simple user interaction class called Operator Interaction is
+depicted in Figure 8.2a. An instance of this class is the Operator Interaction object
+(see Figure 8.2b), which is depicted in a typical behavioral pattern for user inter-
+action objects. The object accepts operator commands from the operator actor;
+requests sensor data from an entity object, Sensor Data Repository; and displays
+the data it receives to the operator. More complex user interaction objects are
+also possible. For example, the Operator Interaction object could be a composite
+user interaction object composed of several simpler user interaction objects. This
+would allow the operator to receive dynamic updates of workstation status in one
+window, receive dynamic updates of alarm status in another window, and conduct
+an interactive dialog with the system in a third window. Each window is composed
+of several GUI widgets, such as menus, buttons, and simpler windows.
+
+                   a)
+
+                                                                          «user interaction»
+                                                                               Operator
+                                                                              Interaction
+
+b)          1: Operator  «user interaction»    2: Sensor       «entity»
+: Operator  Command          : Operator        Request       : SensorData
+                             Interaction                      Repository
+            4: Display                       3: Sensor Data
+            Data
+
+Figure 8.2. Example of user interaction class and object
+120 Software Modeling
+
+a)                     «proxy»
+
+                       Pick&Place
+
+                       Robot
+
+                       Proxy
+
+b)                                      1: Pick & Place   «external
+                                        Robot Command      system»
+      «proxy»                                             : External
+   : Pick&Place        2: Pick & Place                   Pick&Place
+                       Robot Response                       Robot
+        Robot
+        Proxy                                              Real-world
+                                                         external system
+  Software object
+
+                                                                       System boundary
+
+                               (Note: the dashed line for the system boundary is for illustrative purpose only and
+                               does not conform to the UML notation.)
+
+                       Figure 8.3. Example of proxy class and object
+
+8.5.2 Proxy Objects
+
+A proxy object interfaces to and communicates with an external system. The proxy
+object is the local representative of the external system and hides the details of
+"how" to communicate with the external system.
+
+    An example of a proxy class is a Pick & Place Robot Proxy class. An example of
+a behavioral pattern for a proxy object is given in Figure 8.3, which depicts a Pick
+& Place Robot Proxy object that interfaces to and communicates with the External
+Pick & Place Robot. The Pick & Place Robot Proxy object sends pick and place robot
+commands to the External Pick & Place Robot. The real-world robot responds to the
+commands.
+
+    Each proxy object hides the details of how to interface to and communicate with
+the particular external system. A proxy object is more likely to communicate by
+means of messages to an external, computer-controlled system, such as the robot
+in the preceding example, rather than through sensors and actuator, as is the case
+with device I/O boundary objects. However, these issues are not addressed until the
+design phase.
+
+8.5.3 Device I/O Boundary Objects
+
+A device I/O boundary object provides the software interface to a hardware I/O
+device. Device I/O boundary objects are needed for nonstandard application-
+specific I/O devices, which are more prevalent in real-time systems, although they
+are often needed in other systems as well. Standard I/O devices are typically han-
+dled by the operating system, so special-purpose device I/O boundary objects do not
+need to be developed as part of the application.
+
+    A physical object in the application domain is a real-world object that has some
+physical characteristics ­ for example, it can be seen and touched. For every real-
+world physical object that is relevant to the problem, there should be a corre-
+sponding software object in the system. In the Automated Guided Vehicle System,
+for example, the vehicle motor and arm are relevant real-world physical objects,
+

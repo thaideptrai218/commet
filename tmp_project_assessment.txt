@@ -1,0 +1,136 @@
+                    Project Lab - Assessment
+
+Group Project Assessment
+
+# Item                    Description                 Weight             Note
+
+1Requirement Modeling     Requirement model                     10%
+
+2Analysis Modeling        Analysis &                            20%
+
+                          Architect Design
+
+3Architect Design         (Present one time for 2&3)            20%       On going
+4Detail Design            Detail Design                         20%      assessment
+
+Code demo and final group Code demo & Group                                    >=5
+
+5 presentation            present                               30%
+
+                          Interface & Idea & Class 10->20% (If 1+2+3 +4
+
+4 Other                   discussion                  <= 100%)
+Implementation
+
+ Group Project
+    Purpose: Practice modeling & design skills
+    Topics : Lecturer gives topics
+    Team size: 4-6 members
+    Scope: 3-4 Use cases (functions)/member
+    Assessments: 4 milestones, (plan, task, assignment) and 4 presentations
+        o Plan (task, assignment) & Requirement
+        o Analysis & Architecture design
+        o Detail Design
+        o Code demo and final group presentation
+    Student: Must do full stack ­ from requirement modeling to coding phase
+    Optional If group do not want to reduce the number of modules to code:
+        o Group have code demo for 2 UC (medium size)
+        o Execute CQs for one chapter with approval of document at least 1 day before the
+
+            presentation slot
+
+        o The result of presentation is success
+
+    Interface
+    Code: Java
+                 Implementation ­ Group Project
+
+ Group Project Milestones
+
+# Phase           Duration Purpose                                   Output           Present
+  Requirement                   Build requirements models (Use case
+                                diagrams)                            Use case diagrams Option (w3)
+ 1 Modeling
+                            3 Prototype
+  Analysis &
+ 2 Architecture   Analysis modeling
+
+                  Develop architectural design - build
+
+                  architectural design model - Logical view,
+
+                  implementation view, deployment view, Architectural Design
+
+                  3process view models                               document         x (week 5,6)
+
+3Detailed Design   Develop detailed design - build UI                Detailed Design  x (week 7,8)
+4Coding Demo      2design, class design                              documents
+
+                   Develop software based on design                  Running software x (week 9,10)
+                   documents built in previous phases
+                   (Each member develop demo 1-3
+                  2 functions)
+Project Lab
+
+                   Email & commit
+
+# Phase            Doc/code        Purpose                                           Output                     Present
+                                                                                                                x (w3)
+   Requirement                     Build requirements models (Use case               Use case diagrams
+ 1 Modeling                                                                          Prototype (optional)
+                                   diagrams)
+
+                   Wednesday week 2 Prototype
+
+                                              Analysis modeling (static & dynamic)   Analysis modeling (static
+                                              Develop architectural design - build
+                                             architectural design model - Logical    & dynamic)
+                                              view, implementation view, deployment
+                   Wednesday week5 view, process view models                         Architectural Design
+
+2 Architectural                                                                      document                   x (week 5)
+3 Detailed Design
+4 Coding Demo                      Develop detailed design - build UI
+
+                                   design, class design (class & sequence Detailed Design
+
+                   Wednesday week 7 diagram...)                                      documents                  x (week 7)
+
+                                              Develop software based on design       Running software           x (week 9,10)
+                                              documents built in previous phases
+
+                                          (Each member develop demo 1-3
+                   Wednesday week 9 functions)
+Project - Modeling tools
+       Astah Professional - Preferred
+       Visual Paradigm - Preferred
+       Enterprise Architect
+       StarUML
+
+Tools for Group project
+       One Drive store for documents
+       Git Lab for source version control
+       EduNext
+
+Code
+       Java
+1. Campus Food system
+2. Cambridge English Center Management System
+3. Good Job system ­ freelancer
+4. Personal health profile system
+5. Hostel Management and Search System
+6. Tutor school management
+
+7. https://dichvucong.gov.vn/ (Dch v công trc tuyn )
+       B Giáo dc và ào to / B công an
+
+8. https://dichvucong.gov.vn/ (Dch v công trc tuyn )
+
+       Hà Ni
+
+9. Online learn ­ IT, English, soft skills..
+10. eduNext
+11. Hospitial management system: Warehouse management
+12. Human Resource Management System
+13. SuperChain ERP (ERP Qun tr Chui Siêu th)
+

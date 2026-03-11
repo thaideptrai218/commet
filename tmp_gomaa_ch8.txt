@@ -1,0 +1,847 @@
+                                                        Use Case Modeling 87
+
+Supermarket        «extend»      Checkout                  «extend»
+ Customer          (payment)     Customer                 (payment)
+                [cash payment]    payment                 [debit card
+                                                           payment]
+             Pay by Cash                   «extend»
+                                          (payment)     Pay by Debit
+                                          [credit card      Card
+                                           payment]
+
+                                Pay by Credit
+                                     Card
+
+    Figure 6.11. Example of an extend relationship and extension use cases
+
+Checkout Customer Base Use Case
+
+     Use case name: Checkout Customer
+     Summary: System checks out customer.
+     Actor: Customer
+     Precondition: Checkout station is idle, displaying a "Welcome" message.
+     Main sequence:
+
+         1. Customer scans selected item.
+         2. System displays the item name, price, and cumulative total.
+         3. Customer repeats steps 1 and 2 for each item being purchased.
+         4. Customer selects payment.
+         5. System prompts for payment by cash, credit card, or debit card.
+         6. «payment»
+         7. System displays thank-you screen.
+
+    In this base use case description, at step 6 «payment» is a placeholder that identi-
+fies the location at which the appropriate extension use case is executed. For the Pay
+by Cash extension use case, the extension condition is a selection condition called
+[cash payment]. This extension use case is executed if the condition [cash payment]
+is true.
+
+    Pay by Cash Extension Use Case
+
+         Use case name: Pay by Cash
+         Summary: Customer pays by cash for items purchased.
+         Actor: Customer
+         Dependency: Extends Checkout Customer.
+         Precondition: Customer has scanned items but not yet paid for them.
+         Description of insertion segment:
+
+              1. Customer selects payment by cash.
+              2. System prompts customer to deposit cash in bills and/or coins.
+              3. Customer enters cash amount.
+88 Software Modeling
+
+                       4. System computes change.
+                       5. System displays total amount due, cash payment, and change.
+                       6. System prints total amount due, cash payment, and change on
+
+                           receipt.
+
+             For the Pay by Credit Card extension use case, the selection condition is called
+         [credit card payment] (see Figure 6.11). This extension use case is executed if the
+         [credit card payment] condition is true, meaning that the user chose to pay by credit
+         card. Of course, if the user chose instead to pay by cash, then the Pay by Cash use
+         case would be executed instead.
+
+             Pay by Credit Card Extension Use Case
+
+                   Use case name: Pay by Credit Card
+                   Summary: Customer pays by credit card for items purchased.
+                   Actor: Customer
+                   Dependency: Extends Checkout Customer.
+                   Precondition: Customer has scanned items but not yet paid for them.
+                   Description of of insertion segment:
+
+                       1. Customer selects payment by credit card.
+                       2. System prompts customer to swipe card.
+                       3. Customer swipes card.
+                       4. System reads card ID and expiration date.
+                       5. System sends transaction to authorization center containing
+
+                           card ID, expiration date, and payment amount.
+                       6. If transaction is approved, authorization center returns positive
+
+                           confirmation.
+                       7. System displays payment amount and confirmation.
+                       8. System prints payment amount and confirmation on receipt.
+
+             The use case description for the Pay by Debit Card extension use case is handled
+         in a similar way, except that the customer also needs to enter a PIN. Pay by Cash has
+         a selection condition called [debit card payment].
+
+        6.10 USE CASE STRUCTURING GUIDELINES
+
+         Careful application of use case relationships can help with the overall organization
+         of the use case model; however, use case relationships should be employed judi-
+         ciously. It should be noted that small inclusion use cases corresponding to individ-
+         ual functions (such as Dispense Cash, Print Receipt, and Eject Card) should not
+         be considered. These functions are too small, and making them separate use cases
+         would result in a functional decomposition with fragmented use cases in which the
+         use case descriptions would be only a sentence each and not a description of a
+         sequence of interactions. The result would be a use case model that is overly com-
+         plex and difficult to understand ­ in other words, a problem of not being able to
+                                                                                              Use Case Modeling 89
+
+see the forest (the overall sequence of interactions) for the trees (the individual
+functions)!
+
+6.11 SPECIFYING NONFUNCTIONAL REQUIREMENTS
+
+Nonfunctional requirements can be specified in a separate section of the use case
+description, in much the same way that alternative sequences are specified. For
+example, for the Validate PIN use case, there could be a security requirement that
+the card number and PIN must be encrypted. There could also be a performance
+requirement that the system must respond to the actor inputs within 5 seconds. If
+the nonfunctional requirements apply to a group of related use cases, then they can
+be documented as such, as described in the next section.
+
+    The nonfunctional requirements can be specified in a separate section of the use
+case. For the Validate PIN use case, they would be described as follows:
+
+         Security requirement: System shall encrypt ATM card number and PIN.
+         Performance requirement: System shall respond to actor inputs within 5
+         seconds.
+
+6.12 USE CASE PACKAGES
+
+For large systems, having to deal with a large number of use cases in the use case
+model often gets unwieldy. A good way to handle this scale-up issue is to introduce
+a use case package that groups together related use cases. In this way, use case pack-
+ages can represent high-level requirements that address major subsets of the func-
+tionality of the system. Because actors often initiate and participate in related use
+cases, use cases can also be grouped into packages based on the major actors that
+use them. Nonfunctional requirements that apply to a group of related use cases
+could be assigned to the use case package that contains those use cases.
+
+    For example, in the Emergency Monitoring System, the major actors of the sys-
+tem are the Remote Sensor, Monitoring Operator, and Emergency Manager, each of
+whom initiates and participates in several use cases. Figure 6.12 shows an example of
+a use case package for the Emergency Monitoring System ­ namely, the Emergency
+Monitoring Use Case Package, which encompasses four use cases. The Monitoring
+Operator is the primary actor of the View Alarms and View Monitoring Data use cases
+and a secondary actor of the other use cases. The Remote Sensor is the primary actor
+of the Generate Alarm and Generate Monitoring Data use cases.
+
+6.13 ACTIVITY DIAGRAMS
+
+An activity diagram is a UML diagram depicting the flow of control and sequenc-
+ing among activities. An activity diagram shows the sequence of activities, decision
+nodes, loops, and even concurrent activities. Activity diagrams are widely used in
+workflow modeling ­ for example, for service-oriented applications.
+90 Software Modeling
+
+                                  «use case package»
+                      EmergencyMonitoringUseCasePackage
+
+                                           View Alarms
+
+Monitoring            View Monitoring Data
+ Operator
+                           Generate Alarm
+                                                         Remote Sensor
+                          Generate Monitoring
+                                    Data
+
+              Figure 6.12. Example of use case package
+
+    A use case model can also be described using an activity diagram. How-
+ever, to depict a use case, a subset of the activity diagram capabilities is suf-
+ficient. In particular, it is not necessary to model concurrent activities for use
+cases.
+
+    An activity diagram can be used to represent the sequential steps of a use case,
+including the main sequence and all the alternative sequences. An activity diagram
+can therefore be used to provide a more precise description of the use case, because
+it shows exactly where in the sequence and what the condition is for an alterna-
+tive sequence to diverge from the main sequence. An activity node can be used to
+represent one or more sequential steps of the use case. A high-level activity node
+can be used to represent a use case, which can then be decomposed into a separate
+activity diagram. Activity diagrams can also be used to depict sequencing among use
+cases.
+
+    For depicting a use case, an activity diagram uses activity nodes, decision
+nodes, arcs to join sequential activity nodes, and loops. An activity node is used
+to depict one or more steps in the use case description. A decision node is used
+to depict a situation in which, based on the result of the decision, an alterna-
+tive sequence could branch off from the main sequence. Depending on the use
+case, the alternative sequence could rejoin the main sequence ­ for example, by
+looping back to a previous activity node or rejoining the main sequence further
+down.
+
+    Activity nodes can be aggregate nodes that are hierarchically decomposed to
+give a lower-level activity diagram. This concept can be used to depict inclusion
+and extension use cases. Thus, an activity node in a base use case can be used to
+                                                                 Use Case Modeling 91
+
+                         Receive
+                     Order Request
+
+                     [account does not exist]
+
+                                               [account exists]
+
+    Create                      Get
+New Account          Account Information
+
+                                 Authorize
+                                Credit Card
+
+                     [invalid]
+
+                                               [valid]
+
+       Display               Create
+Invalid Credit Card  New Delivery Order
+
+                     Display and Confirm
+                            the Order
+
+                            Figure 6.13. Example of activity diagram
+
+represent a link to an inclusion (or extension) use case, which is then depicted on a
+separate lower-level activity diagram.
+
+    An example of an activity diagram is given in Figure 6.13 for the Make Order
+Request use case of the Online Shopping System (see Section 6.6). This use case
+consists of a main sequence in which the customer makes an order request to pur-
+chase items from an online catalog and has sufficient credit to pay for the items. The
+alternative sequences are for creating a new customer account and for an invalid
+credit card. Each decision point that results in an alternative scenario is explicitly
+depicted. In the example, the customer enters the order request information, system
+gets account information (with an alternative sequence to create a new account),
+and requests credit card authorization. If the credit card is valid, the system creates
+a new delivery order and displays the order. If the credit card is invalid, the system
+displays an invalid credit card prompt.
+92 Software Modeling
+
+6.14 SUMMARY
+
+This chapter provided an overview of requirements analysis and specification and
+described the use case approach to defining the functional requirements of the sys-
+tem. It described the concepts of actor and use cases. It also described use case
+relationships, particularly the extend and include relationships.
+
+    The use case model has a strong influence on subsequent software development;
+thus, use cases are realized in the analysis model during dynamic interaction model-
+ing, as described in Chapters 9 and 11. For each use case, the objects that participate
+in the use case are determined by using the object structuring criteria described in
+Chapter 8, and the sequence of interactions between the objects is defined. Software
+can be incrementally developed by selecting the use cases to be developed in each
+phase of the project, as described in Chapter 5. Integration and system test cases
+should also be based on use cases. Statecharts can also be used to depict the states
+and transitions for a state-dependent use case, as described in Chapter 10.
+
+EXERCISES                                           (a) A sequence that describes an error
+                                                         case
+Multiple-choice questions: For each ques-
+tion, choose one of the answers.                   (b) A sequence that is different from
+                                                         the main sequence
+ 1. What is a use case?
+     (a) A case study involving users               (c) A sequence that describes interac-
+     (b) A sequence of interactions between              tions with a secondary actor
+           the user and the system
+     (c) A sequence of interactions between        (d) A sequence that describes interac-
+           the user and the objects in the               tions with a primary actor
+           system
+     (d) A sequence of user inputs to the       6. What can an inclusion use case be used
+           system                                  for?
+                                                    (a) To describe an inclusive use case
+ 2. What is an actor in a use case?                (b) To describe a lengthy interaction
+     (a) An object inside the system                     with an actor
+     (b) A person who performs on stage             (c) To describe functionality that is
+     (c) An external entity that interacts               common to more than one use case
+           with the system                         (d) To describe a use case that includes
+     (d) The customer to whom the system                 other use cases
+           will be delivered
+                                                7. What can an extension use case be used
+ 3. What is a primary actor?                       for?
+     (a) The actor who goes on stage first          (a) To describe a lengthy interaction
+     (b) The actor that starts the use case              with an actor
+     (c) An actor that participates in the use     (b) To describe functionality that is
+           case                                          common to more than one use case
+     (d) An object inside the system                (c) To describe the functionality of a
+                                                         use case that is extended by another
+ 4. What is a secondary actor?                           use case(s)
+     (a) The actor who goes on stage second        (d) To describe a conditional part of a
+     (b) The actor that starts the use case              different use case that is only exe-
+     (c) An actor that participates in the use           cuted under certain circumstances
+           case
+     (d) An object inside the system            8. What can an activity diagram be used
+                                                   for in use case modeling?
+ 5. What is an alternative sequence in a use        (a) To depict the sequence of activities
+     case?                                               executed by all the use cases in the
+                                                         system
+                                                 Use Case Modeling 93
+
+   (b) To depict the sequence of external             (b) As a use case precondition
+         activities that the use case interacts       (c) As a use case postcondition
+         with                                         (d) In a separate document
+                                                 10. What is a use case package?
+    (c) To depict the sequence of active              (a) A package describing the actors in
+         objects in a use case
+                                                            the system
+   (d) To depict the activities in the main           (b) A package describing the use cases
+         and alternative sequences of a use
+         case                                               in the system
+                                                      (c) A group of related use cases
+9. How can a nonfunctional requirement                (d) The package of objects that partici-
+   be described in a use case model?
+    (a) In a separate section of the use case               pate in the use case
+         description
+     7
+
+     Static Modeling
+
+         The static model addresses the static structural view of a problem, which does not
+         vary with time. A static model describes the static structure of the system being
+         modeled, which is considered less likely to change than the functions of the system.
+         In particular, a static model defines the classes in the system, the attributes of the
+         classes, the relationships between classes, and the operations of each class. In this
+         chapter, static modeling refers to the modeling process and the UML class diagram
+         notation is used to depict the static model.
+
+             The concepts of objects, classes, and class attributes are described in Chapter 4.
+         This chapter describes the relationships between classes. Three types of relation-
+         ships are described: associations, whole/part (composition and aggregation) rela-
+         tionships, and generalization/specialization (inheritance) relationships. In addition,
+         this chapter addresses special considerations in static modeling of the problem
+         domain, including static modeling of the total system context and software system
+         context, as well as static modeling of entity classes. Design of class operations is
+         deferred to the design phase, and is addressed during class design, as described in
+         Chapter 14.
+
+             Static models are depicted on class diagrams, as described in this chapter. Sec-
+         tion 7.1 describes the different kinds of associations between classes. Section 7.2
+         describes whole/part relationships, particularly composition and aggregation hier-
+         archies. Section 7.3 describes generalization/specialization hierarchies. Section 7.4
+         provides an overview of constraints. Section 7.5 describes static modeling with
+         UML, in which the initial emphasis is on modeling the physical classes and entity
+         classes. The next topic, covered in Section 7.6, is static modeling of the scope of
+         the total system (hardware and software) and the scope of the software system in
+         order to determine the border between the total system and the external environ-
+         ment, and then the border between the software system and the external environ-
+         ment. Section 7.7 describes the categorization of classes using UML stereotypes,
+         and Section 7.8 describes how UML stereotypes can be applied to modeling exter-
+         nal classes. Static modeling of the entity classes, which are data-intensive classes, is
+         described in Section 7.9.
+
+94
+                                                                                                   Static Modeling 95
+
+7.1 ASSOCIATIONS BETWEEN CLASSES
+
+An association defines a relationship between two or more classes, denoting a static,
+structural relationship between classes. For example, Employee Works in Depart-
+ment, where Employee and Department are classes and Works in is an association.
+The classes are nouns, whereas the association is usually a verb or verb phrase.
+
+    A link is a connection between instances of the classes (objects) and represents
+an instance of an association between classes. For example, Jane Works in Manu-
+facturing, where Jane is an instance of Employee and Manufacturing is an instance of
+Department. A link can exist between two objects if, and only if, there is an associa-
+tion between their corresponding classes.
+
+    Associations are inherently bidirectional. The name of the association is in the
+forward direction: Employee Works in Department. There is also an implied oppo-
+site direction of the association (which is often not explicitly stated): Department
+Employs Employee. Associations are most often binary ­ that is, representing a rela-
+tionship between two classes. However, they can also be unary (self-associations),
+ternary, or higher order.
+
+7.1.1 Depicting Associations on Class Diagrams
+
+On class diagrams, an association is shown as an arc joining the two class boxes, with
+the name of the association next to the arc. An example is given in Figure 7.1 of the
+association Company Is led by CEO.
+
+    In class diagrams, association names usually read from left to right and top to
+bottom. However, on a large class diagram with many classes, classes are usually in
+different positions relative to each other. To avoid ambiguity when reading UML
+class diagrams, COMET uses the UML arrowhead notation to point in the direction
+in which the association name should be read, as shown in Figure 7.1.
+
+                                                                      Company
+                                                            name: String
+                                                            address: String
+                                                            businessSector: String
+
+                                                                                1
+                                                                                  Is led by
+
+                                                                                1
+
+                                                                         CEO
+                                                            name: String
+                                                            employeeId: String
+                                                            address: String
+                                                            phoneNumber: Integer
+
+                              Figure 7.1. Example of one-to-one association
+96 Software Modeling
+
+        7.1.2 Multiplicity of Associations
+
+         The multiplicity of an association specifies how many instances of one class can
+         relate to a single instance of another class. The multiplicity of an association can
+         be as follows:
+
+           One-to-one association. In a one-to-one association between two classes, the
+             association is one-to-one in both directions. Thus, an object of either class has
+             a link to only one object of the other class. For example, in the association
+             Company Is led by CEO (i.e., Chief Executive Officer), a particular company has
+             only one CEO, and a CEO is leader of only one company. An example is the
+             company Apple with its CEO Steve Jobs. The static modeling notation for a one-
+             to-one association is illustrated in Figure 7.1.
+
+           One-to-many association. In a one-to-many association, there is a one-to-many
+             association in one direction between the two classes and a one-to-one associ-
+             ation between them in the opposite direction. For example, in the association,
+             Bank Administers Account, an individual bank administers many accounts, but an
+             individual account is administered by only one bank. The static modeling nota-
+             tion for a one-to-many association is illustrated in Figure 7.2.
+
+           Numerically specified association. A numerically specified association is an asso-
+             ciation that refers to a specific number. For example, in the association Car Is
+             entered through Door, one car has two doors or four doors (depicted as 2, 4) but
+             never one, three, or five doors. The association in the opposite direction is still
+             one-to-one ­ that is, a door belongs to only one car. Note that a particular car
+             manufacturer makes the decision of how many doors a car can have; another
+             manufacturer might make a different decision. A numerically specified associa-
+             tion is illustrated in Figure 7.3.
+
+           Optional association. In an optional association, there might not always be a
+             link from an object in one class to an object in the other class. For example, in
+             the association Customer owns Debit Card, customers can choose whether or not
+             they have a debit card. The optional (zero or one) association is shown in Fig-
+             ure 7.4. It is also possible to have a zero, one, or more association. For example,
+             in the association Customer Owns Credit Card, a customer could have no credit
+
+                                                                                      Bank
+
+                                                                         bankName: String
+                                                                         bankAddress: String
+
+                                                                                             1
+
+                                                                                                Administers
+
+                                                                                           1..*
+
+                                                                                     Account
+
+                                                                         accountNumber: Integer
+                                                                         balance: Real
+
+                                     Figure 7.2. Example of one-to-many association
+                                                              Static Modeling 97
+
+                                 Car
+
+                   modelName: String
+                   manufacturer: String
+                   modelYear: Date
+
+                                       1
+
+                                          Is entered through
+
+                                      2, 4
+
+                                 Door
+
+                    height: Real
+                    width: Real
+                    depth: Real
+                    windowArea: Real
+                    material: String
+
+Figure 7.3. Numerically specified association
+
+    cards, one credit card, or many credit cards, as shown in Figure 7.5. Note that
+    in both these examples, the association in the opposite direction is one-to-one
+    (e.g., Credit Card Owned by Customer).
+ Many-to-many association. A many-to-many association is an association be-
+    tween two classes with a one-to-many association in each direction. For exam-
+    ple, in the association Course Is attended by Student, Student Enrolls in Course,
+    there is a one-to-many association between a course and the students who attend
+    it, because a course is attended by many students. There is also a one-to-many
+    association in the opposite direction, because a student could enroll in many
+    courses. This is illustrated in Figure 7.6, which shows the association in each
+    direction.
+
+    An example of classes and their associations in a banking application is given
+in Figure 7.7. The Bank class has a one-to-many association with the Customer class
+and with the Debit Card class. Thus, a bank provides a service for many customers
+
+                                                                            Customer
+
+                                                                  customerName: String
+                                                                  customerId: String
+                                                                  customerAddress: String
+
+                                                                                      1
+
+                                                                                             Owns
+
+                                                                                    0..1
+
+                                                                            DebitCard
+
+                                                                  cardId: Integer
+                                                                  PIN: String
+                                                                  startDate: Date
+                                                                  expirationDate: Date
+                                                                  status: Integer
+                                                                  limit: Real
+                                                                  total: Real
+
+                          Figure 7.4. Optional (zero or one) association
+98 Software Modeling
+
+                                                                                   Customer
+                                                                        customerName: String
+                                                                        customerId: String
+                                                                        customerAddress: String
+
+                                                                                             1
+                                                                                                    Owns
+
+                                                                                           0..*
+
+                                                                                  CreditCard
+                                                                         cardType: Integer
+                                                                         cardId: Integer
+                                                                         startDate: Date
+                                                                         expirationDate: Date
+                                                                         status: Integer
+
+                                     Figure 7.5. Optional (zero, one, or many) association
+
+                                 Course
+
+                     courseId: String
+                     courseName: String
+                     section#: Integer
+                     semester: String
+
+                                  *
+
+                     Enrolls in          Is attended by
+
+                                 1..*
+
+                                Student
+
+                     studentName: String
+                     studentId: String
+                     studentAddress: String
+                     studentType: String
+
+                  Figure 7.6. Many-to-many association
+
+Managed by
+
+               1  1               1        Provides service for
+President
+                     Bank                Owns                                    1..*
+                                                                    1      Customer
+                     1
+                                                                                 1..*
+                  Administers                                                    Owns
+
+                     1..*        0..1                                            1..*
+                                                                           Account
+                     DebitCard *             Provides access to
+                                                                     1..*
+
+Figure 7.7. Example of associations on a class diagram
+                                                                                            Static Modeling 99
+
+          Bank                     Customer                                  DebitCard
+
+bankName : String         customerName : String                      cardId : String
+bankAddress : String      customerId : String                        PIN : String
+                          customerAddress : String                   startDate : Date
+                                                                     expirationDate : Date
+                                                                     status : Integer
+                                                                     limit : Real
+                                                                     total : Real
+
+          Account                     President
+
+accountNumber : Integer   name : String
+balance : Real            employeeId : String
+                          address : String
+                          phoneNumber : Integer
+
+Figure 7.8. Example of class attributes
+
+and administers many debit cards. Customer has a many-to-many association with
+Account, so a customer might own more than one account, and an account could
+be a joint account belonging to more than one customer. Customer has an optional
+association with Debit Card, so a given customer might or might not own a debit card,
+but a debit card must belong to a customer. Bank has a one-to-one association with
+President, so a bank can have only one president, and a president can be president
+of only one bank. The attributes of these classes are shown in Figure 7.8.
+
+7.1.3 Ternary Associations
+
+A ternary association is a three-way association among classes. An example of a
+ternary association is among the classes Buyer, Seller, and Agent. The association is
+that the Buyer negotiates a price with the Seller through an Agent. This is illustrated
+in Figure 7.9. The ternary association is shown as a diamond joining the three classes.
+A higher-order association, which is an association among more than three classes,
+is quite rare.
+
+7.1.4 Unary Associations
+
+A unary association, also referred to as a self-association, is an association between
+an object of one class and another object in the same class. Examples are Person
+
+            Buyer         Negotiates                                            Seller
+                             price
+name: String                                                         name: String
+address: String                                                      address: String
+phoneNumber: Integer                                                 phoneNumber: Integer
+movingDateTarget: String                                             sellingPrice: Integer
+homePriceTarget: Integer
+
+                                                          Agent
+
+                                            name: String
+                                            address: String
+                                            company: String
+                                            workPhoneNumber: String
+                                            homePhoneNumber: String
+
+Figure 7.9. Example of ternary association
+100 Software Modeling
+
+                                      Is child of
+
+                                            Person
+                       Figure 7.10. Example of unary association
+
+Is child of Person (Figure 7.10), Person Is married to Person, and Employee Is boss of
+Employee.
+
+7.1.5 Association Classes
+
+An association class is a class that models an association between two or more
+classes. The attributes of the association class are the attributes of the association. In
+a complex association between two or more classes, it is possible for an association
+to have attributes. This happens most often in many-to-many associations, where an
+attribute does not belong to any of the classes but belongs to the association.
+
+    For an example of an association class, consider the many-to-many association
+between Project and Employee classes. In this association, a project is staffed by many
+employees and an employee can work on many projects:
+
+    Project Is staffed by Employee
+    Employee Works on Project
+
+    Figure 7.11 illustrates the two classes, Employee and Project, as well as an associ-
+ation class called Hours, whose attribute is hours Worked. The attribute hours Worked
+is not an attribute of either the Employee or Project classes. It is an attribute of the
+association between Employee and Project because it represents the hours worked
+by a specific employee (of which there are many) on a specific project (an employee
+works on many projects).
+
+7.2 COMPOSITION AND AGGREGATION HIERARCHIES
+
+Both composition and aggregation hierarchies address a class that is made up of
+other classes. Composition and aggregations are special forms of a relationship in
+which classes are connected by the whole/part relationship. In both cases, the rela-
+tionship between the parts and the whole is an Is part of relationship.
+
+Employee                                                               Project
+
+employeeName: String     *  Works on                        *  projectId: String
+                                      Is staffed by            projectName: String
+employeeId: String                                             startDate: Date
+                                                               endDate: Date
+employeeAddress: String                                        customer: String
+
+level: String
+
+                                    Hours
+                            hoursWorked: Real
+
+Figure 7.11. Example of association class
+                                                                              Static Modeling 101
+
+                                     ATM
+
+            1                     1                          1             1
+                        CardReader               CashDispenser  ReceiptPrinter
+ATMCustomer
+KeypadDisplay
+
+Figure 7.12. Example of composition hierarchy
+
+    A composition is a stronger relationship than an aggregation, and an aggregation
+is a stronger relationship than an association. In particular, a composition relation-
+ship is a stronger relationship between the parts and the whole than an aggregation
+relationship. A composition is also a relationship among instances. Thus, the part
+objects are created, live, and die together with the whole. The part object can belong
+to only one whole.
+
+    A composite class often involves a physical relationship between the whole and
+the parts. Thus, the ATM is a composite class consisting of four parts: a Card Reader,
+a Cash Dispenser, a Receipt Printer, and the ATM Customer Keypad Display classes (as
+shown in Figure 7.12). The ATM composite class has a one-to-one association with
+each of its four part classes.
+
+    The aggregation hierarchy is a weaker form of whole/part relationship. In an
+aggregation, part instances can be added to and removed from the aggregate whole.
+For this reason, aggregations are likely to be used to model conceptual classes rather
+than physical classes. In addition, a part could belong to more than one aggregation.
+An example of an aggregation hierarchy is a College in a university (Figure 7.13),
+whose parts are an Admin Office, several Departments, and several Research Centers.
+New departments can be created, and old departments are occasionally removed or
+merged with other departments. Research centers can also be created, removed, or
+merged.
+
+    In both composition and aggregation, attributes are propagated from the whole
+to the part. Thus, each ATM has an ATM Id that also identifies the specific card
+
+                                             College
+
+                                     collegeName: String
+                                     dean: String
+
+                     1                     1..*                              1..*
+
+    Admin Office             Department                     Research Center
+
+location: String        deptName: String                  name: String
+phone#: String          deptLocation: String              location: String
+administrator: String   deptPhone#: String                phone#: String
+                        chairPerson: String               head: String
+                        secretary: String                 funding: Real
+                                                          foundingDate: Date
+                                                          renewalDate: Date
+
+Figure 7.13. Example of aggregation hierarchy
+102 Software Modeling
+
+                                    Account
+
+                         accountNumber: Integer
+                         balance: Real
+
+     CheckingAccount                                   SavingsAccount
+lastDepositAmount: Real                          interest: Real
+
+Figure 7.14. Generalization/specialization hierarchy
+
+reader, cash dispenser, and customer keypad/display, which are part of the ATM
+composite class.
+
+7.3 GENERALIZATION/SPECIALIZATION HIERARCHY
+
+Some classes are similar but not identical. They have some attributes in common
+and others that are different. In a generalization/specialization hierarchy, common
+attributes are abstracted into a generalized class, which is referred to as a superclass.
+The different attributes are properties of the specialized class, which is referred to
+as a subclass. There is an Is a relationship between the subclass and the superclass.
+The superclass is also referred to as a parent class or ancestor class. The subclass is
+also referred to as a child class or descendent class.
+
+    Each subclass inherits the properties of the superclass but then extends these
+properties in different ways. The properties of a class are its attributes or opera-
+tions. Inheritance allows the adaptation of the superclass to form the subclass. The
+subclass inherits the attributes and the operations from the superclass. The sub-
+class could then add attributes, add operations, or redefine operations. Each sub-
+class could itself also be a superclass, which is specialized further to develop other
+subclasses. Designing superclass and subclass operations is described in Chapter 14.
+
+    Consider the example of bank accounts given in Figure 7.14. Checking accounts
+and savings accounts have some attributes in common and others that are differ-
+ent. The attributes that are common to all accounts ­ namely, account Number and
+balance ­ are made the attributes of an Account superclass. Attributes specific to a
+savings account, such as the interest accumulated (in this bank, checking accounts
+do not accumulate any interest), are made the attributes of the subclass Savings
+Account. Attributes specific to a checking account, such as the last Deposit Amount,
+are made the attributes of the subclass Checking Account.
+
+    Savings Account Is a Account
+    Checking Account Is a Account
+
+    A discriminator is an attribute that indicates which property of the object is
+being abstracted by the generalization relationship. For example, the discriminator
+in the Account generalization just given, account Type, discriminates between Check-
+ing Account and Savings Account, as shown in Figure 7.15. The discriminator does
+not need to be an attribute of the generalized or specialized classes. Thus, it is not
+an attribute of the Account superclass or the two subclasses.
+                                                                                     Static Modeling 103
+
+                                    Account
+                         accountNumber: Integer
+                         balance: Real
+
+                                                  accountType
+
+     CheckingAccount                                                 SavingsAccount
+lastDepositAmount: Real                                        interest: Real
+
+Figure 7.15. Discriminator in generalization/specialization
+
+7.4 CONSTRAINTS
+
+A constraint specifies a condition or restriction that must be true (Rumbaugh,
+Booch, and Jacobson 2005). A constraint is expressed in any textual language. The
+UML also provides a constraint language, the Object Constraint Language (OCL)
+(Warmer and Kleppe 1999), which can optionally be used.
+
+    One kind of constraint is a restriction on the possible values of an attribute.
+Consider the following: in the banking example, it might be stipulated that accounts
+are not allowed to have a negative balance. This can be expressed as a constraint on
+the attribute balance of the Account class to state that the balance is not allowed to
+be negative, {balance >= 0}. On a class diagram, the constraint on the attribute is
+shown next to the attribute to which it applies, as illustrated in Figure 7.16.
+
+    Another kind of constraint is a restriction on an association link. Usually objects
+on the "many" side of an association have no order. However, in some cases, objects
+in the problem domain might have an explicit order that is desirable to model. Con-
+sider, for example, the one-to-many association Account Modified by ATM Trans-
+action. In this association, ATM transactions are ordered by time; hence, the con-
+straint can be expressed as {ordered by time}. This constraint can be depicted on a
+class diagram, as shown in Figure 7.17.
+
+7.5 STATIC MODELING AND THE UML
+
+The approach used in COMET is to have a conceptual static model early in the
+analysis phase that is used to model and help understand the problem domain. The
+goal is to focus on those parts of the problem domain that benefit most from static
+modeling, particularly the physical classes and the data-intensive classes, which are
+called entity classes. This section describes the initial conceptual static modeling
+carried out during analysis; the more detailed static modeling carried out during
+design is described in Chapter 14.
+
+                                Account
+
+                   accountNumber: Integer
+                   balance: Real {balance >= 0}
+
+Figure 7.16. Example of constraints on objects
+

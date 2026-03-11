@@ -1,0 +1,1720 @@
+                                                                                           Finite State Machines 165
+
+Processing Customer Input composite state, as shown in Figure 10.12a. The tran-
+sition out of the Processing Customer Input composite state into the Confiscat-
+ing state actually originates from the Validating PIN substate, as shown in Fig-
+ure 10.12a. The case of the Cancel transition into Ejecting state is described in the
+next section.
+
+10.5.3 Aggregation of State Transitions
+
+The hierarchical statechart notation also allows a transition out of every one of the
+substates on a statechart to be aggregated into a transition out of the composite
+state. Careful use of this feature can significantly reduce the number of state transi-
+tions on a statechart.
+
+    Consider the following example in which aggregation of state transitions would
+be useful. In the flat statechart shown in Figure 10.9, it is possible for the customer
+to press the Cancel button on the ATM machine in any of the three states Waiting
+for PIN, Validating PIN, and Waiting for Customer Choice. In each case, the Cancel event
+transitions the ATM to Ejecting state. This is depicted by a Cancel arc leaving each
+of these states and entering the Ejecting state.
+
+    This can be expressed more concisely on a hierarchical statechart. From each of
+the three substates of the Processing Customer Input composite state, the input event
+Cancel causes a transition to the Ejecting state. Because the Cancel event can take
+place in any of the three Processing Customer Input substates, a Cancel transition
+could be shown leaving each substate. However, it is more concise to show one
+Cancel transition leaving the Processing Customer Input composite state, as shown in
+Figure 10.12a. The transitions out of the substates are not shown (even though an
+individual transition would actually originate from one of the substates). This kind
+of state transition, in which the same event causes a transition out of several states
+to another state, usually results in a plethora of arcs on flat statecharts and state
+transition diagrams.
+
+    In contrast, because the Third Invalid event only occurs in Validating PIN state
+(Figure 10.12a), it is shown leaving this substate only and not from the composite
+state.
+
+10.5.4 Orthogonal Statecharts
+
+Another kind of hierarchical state decomposition is orthogonal state decomposition,
+which is used to model different views of the same object's state. With this approach,
+a high-level state on one statechart is decomposed into two (or more) orthogonal
+statecharts. The two orthogonal statecharts are shown separated by a dashed line.
+When the higher-level statechart is in the composite state, it is simultaneously in
+one of the substates on the first lower-level orthogonal statechart and in one of the
+substates on the second lower-level orthogonal statechart.
+
+    Although orthogonal statecharts can be used to depict concurrent activity within
+the object containing the statechart, it is better to use this kind of decomposition to
+show different parts of the same object that are not concurrent. Designing objects
+with only one thread of control is much simpler and is strongly recommended. When
+true concurrency is required, use separate objects and define each object with its
+own statechart.
+166
+
+     ATM Sequencing                        ATM Control
+     Closedown Request Condition
+                                         ATM
+                                     Sequencing
+                                  Composite State
+
+                                  Closedown Not Requested
+
+                                  Startup                                Closedown
+
+                                  Closedown Was Requested
+
+     Figure 10.13. Example of orthogonal statecharts in the ATM problem
+                                                                                           Finite State Machines 167
+
+    The use of orthogonal statecharts to depict conditions can be seen in the ATM
+example. This case is illustrated in Figure 10.13, where the statechart for the ATM
+Machine, ATM Control, is now decomposed into two orthogonal statecharts, one for
+ATM Sequencing and one for Closedown Request Condition. The two statecharts are
+depicted on a high-level statechart, with a dashed line separating them. The ATM
+Sequencing statechart is in fact the main statechart of the ATM, which depicts the
+states the ATM goes through while processing a customer request.
+
+    Note that, at any one time, the ATM Control composite state is in one of the
+substates of the ATM Sequencing statechart and one of the substates of the Closedown
+Request Condition statechart. Closedown Request Condition is a simple statechart with
+two states reflecting whether closedown has been requested or not, with Closedown
+Not Requested as the initial state. The Closedown event causes a transition to the
+state Closedown Was Requested, and the Startup event causes a transition back to
+Closedown Not Requested. The ATM Control statechart is the union of the Closedown
+Request Condition and the ATM Sequencing statecharts. The Closedown Was Requested
+and Closedown Not Requested states of the Closedown Request Condition statechart
+(see Figure 10.13) are the conditions checked on the ATM Sequencing statechart,
+when the after (Elapsed Time) event is received in Terminating state (Figure 10.17).
+Note that the Closed Down state is actually a state on the ATM Sequencing statechart.
+
+10.6 GUIDELINES FOR DEVELOPING STATECHARTS
+
+The following guidelines apply to developing either flat or hierarchical statecharts,
+unless otherwise explicitly stated:
+
+ A state name must reflect an identifiable situation or an interval of time when
+    something is happening in the system. Thus, a state name is often an adjective
+    (e.g., Idle), a phrase with an adjective (e.g., ATM Idle), a gerund (e.g., Dispensing),
+    or a phrase with a gerund (e.g., Waiting for PIN). The state name should not
+    reflect an event or action such as ATM Dispenses or Dispense Cash, respectively.
+
+ On a given statechart, each state must have a unique name. It is usually ambigu-
+    ous to have two states with the same name. In theory, a substate within one
+    composite state could have the same name as a substate of a different composite
+    state; however, this is confusing and should therefore be avoided.
+
+ It must be possible to exit from every state. It is not necessary for a statechart to
+    have a terminating state, because the statechart might exist for the duration of
+    the system or object.
+
+ On a sequential statechart, the statechart is in only one state at a time. Two states
+    cannot be active simultaneously (e.g., Waiting for PIN and Dispensing). One state
+    must follow sequentially from the other.
+
+ Do not confuse events and actions. An event is the cause of the state transition,
+    and the action is the effect of the state transition.
+
+ An event happens at a moment in time. The event name indicates that something
+    has just happened (e.g., Card Inserted, Door Closed) or the result of an action such
+    as Valid PIN or Third Invalid.
+
+ An action is a command ­ for example, Dispense Cash, Start Cooking, Eject.
+ An action executes instantaneously. It is possible to have more than one
+
+    action associated with a state transition. All these actions conceptually execute
+    simultaneously; hence, no assumptions can be made about the order in which the
+168 Software Modeling
+
+             actions are executed. Consequently, no interdependencies must exist between
+             the actions. If a dependency does exist, it is necessary to introduce an intermedi-
+             ate state.
+           A condition is a Boolean value. If a state transition is labeled event [condition],
+             a state transition takes place only if, at the moment the event happens, the con-
+             dition is true. A condition is true for some interval of time. The state transition
+             Door Closed [Time Remaining] is only taken if there is a finite time remaining when
+             the door is closed. The state transition will not take place if there is no time left
+             when the door is closed.
+           Actions and conditions are optional. They should only be used when necessary.
+
+        10.7 DEVELOPING STATECHARTS FROM USE CASES
+
+         To develop a statechart from a use case, start with a typical scenario given by the use
+         case ­ that is, one particular path through the use case. Ideally, this scenario should
+         be the main sequence through the use case, involving the most usual sequence of
+         interactions between the actor(s) and the system. Now consider the sequence of
+         external events given in the scenario. Usually, an input event from the external
+         environment causes a transition to a new state, which is given a name correspond-
+         ing to what happens in that state. If an action is associated with the transition, the
+         action occurs in the transition from one state to the other. Actions are determined
+         by considering the response of the system to the input event, as given in the use case
+         description.
+
+             Initially, a flat statechart is developed that follows the event sequence given in
+         the main scenario. The states depicted on the statechart should all be externally
+         visible states ­ that is, the actor should be aware of each of these states. In fact,
+         the states represent consequences of actions taken by the actor, either directly or
+         indirectly. This is illustrated in the detailed example given in the next section.
+
+             To complete the statechart, determine all the possible external events that could
+         be input to the statechart. You do this by considering the description of alternative
+         paths given in the use case. Several alternatives describe the reaction of the system
+         to alternative inputs from the actor. Determine the effect of the arrival of these
+         events on each state of the initial statechart; in many cases, an event could not occur
+         in a given state or will have no impact. In other states, however, the arrival of an
+         event will cause a transition to an existing state or some new state that needs to be
+         added to the statechart. The actions resulting from each alternative state transition
+         also need to be considered. These actions should already be documented in the use
+         case description as the system reaction to an alternative input event.
+
+             In some applications, one statechart can participate in more than one use case.
+         In such situations, there will be one partial statechart for each use case. The partial
+         statecharts will need to be integrated to form a complete statechart. The implication
+         is that there is some precedence in the execution of (at least some of) the use cases
+         and their corresponding statecharts. To integrate two partial statecharts, it is neces-
+         sary to find one or more common states. A common state might be the last state of
+         one statechart and the first state of the next statechart. However, other situations
+         are possible. The integration approach is to integrate the partial statecharts at the
+         common state, in effect superimposing the common state of the second statechart
+                                                                                           Finite State Machines 169
+
+on top of the same state on the first statechart. This can be repeated as necessary,
+depending on how many partial statecharts need to be integrated.
+
+    Given the complete flat statechart, the next step is to develop hierarchical state-
+charts where possible. There are actually two main approaches to developing hier-
+archical statecharts. The first approach is a top-down approach to determine major
+high-level states, sometimes referred to as modes of operation. For example, in an
+airplane control statechart, the modes might be Taking Off, In Flight, and Landing.
+Within each mode, there are several states, some of which might in turn be com-
+posite states. This approach is more likely to be used in complex real-time systems,
+which are frequently highly state-dependent. The second approach is to first develop
+a flat statechart and then identify states that can be aggregated into composite states,
+as described in Section 10.8.4.
+
+10.8 EXAMPLE OF DEVELOPING A STATECHART FROM A USE CASE
+
+To illustrate how to develop a statechart from a use case, consider the ATM Control
+statechart from the Banking System case study.
+
+10.8.1 Develop Statechart for Each Use Case
+
+The use cases for the Banking System are given in Chapter 21. In this example, we
+will consider the use cases for Validate PIN and Withdraw Cash. Both use cases
+describe the sequence of interactions between the actor ­ the ATM Customer ­ and
+the system, in which PIN validation precedes withdrawing cash. For each use case,
+a statechart is constructed as illustrated in Figures 10.14 and 10.15. Figure 10.14
+
+Card Inserted /           Idle
+Get PIN
+                        Entry /
+                 Display Welcome
+
+                             Waiting for PIN
+
+                PIN Entered /
+                Validate PIN
+
+                              Validating PIN
+
+             Valid PIN /
+             Display Menu,
+             Update Status
+
+                                Waiting for
+                            Customer Choice
+
+Figure 10.14. Statechart for ATM Control: Validate PIN use case
+170 Software Modeling
+
+         Idle          After (Elapsed Time) [Closedown Not Requested]
+
+       Entry /
+Display Welcome
+
+                                              Terminating
+
+                                                            Card Ejected /
+                                                           Display Ejected
+
+                                                Ejecting
+
+    Waiting for                                        Receipt Printed /
+Customer Choice                                                Eject
+
+                                              Printing
+
+Withdrawal Selected /                              Cash Dispensed /
+Request Withdrawal,                                   Print Receipt,
+Display Wait
+                                              Display Cash Dispensed,
+                                              Confirm Cash Dispensed
+
+Processing                                    Dispensing
+Withdrawal
+                       Withdrawal Approved /
+                       Dispense Cash,
+                       Update Status
+
+Figure 10.15. Statechart for ATM Control: Withdraw Funds use case
+
+shows the statechart for the main sequence of the Validate PIN use case depicting
+the scenario in which the PIN is valid, as described in Section 10.4.1. This statechart
+starts in Idle state and ends in Waiting for Customer Choice state.
+
+    Figure 10.15 shows the statechart for the Withdraw Funds use case correspond-
+ing to the main scenario of the use case. This statechart starts in Waiting for Customer
+Choice state. In the main scenario, withdrawal is selected (resulting in transition
+into Processing Withdrawal state), withdrawal is approved (resulting in transition to
+Dispensing state), cash is dispensed (resulting in transition to Printing state), a receipt
+is printed (resulting in transition to Ejecting state), the card is ejected, transition into
+Terminating state for a fixed period, and finally return to Idle state, when the period
+elapses.
+
+    In this example, the states of the ATM statechart are all externally visible; that
+is, the actor is aware of each of these states. In fact, the states depict consequences
+of actions taken by the actor, either directly or indirectly.
+
+10.8.2 Consider Alternative Sequences
+
+After the first version of the statechart is completed, further refinements can be
+made. To complete the statechart, it is necessary to consider the effect of each alter-
+native sequence described in the Alternatives section of the use cases. Figure 10.9
+shows the Validate PIN statechart with the alternative sequences added to the main
+sequence, as described in Section 10.4.1. Figure 10.16 shows the Withdraw Funds
+statechart with the alternative sequences added to the main sequence. Thus, in
+                                                             Finite State Machines 171
+
+        Idle                          After (Elapsed Time) [Closedown Not Requested]
+
+       Entry /
+Display Welcome
+
+                         Waiting for        Rejected /       Terminating
+                     Customer Choice        Eject
+                                                                             Card Ejected /
+Withdrawal Selected /                 Withdrawal Approved /                 Display Ejected
+Request Withdrawal,                   Dispense Cash,
+Display Wait                          Update Status            Ejecting
+
+                         Processing                                      Receipt Printed /
+                         Withdrawal                                              Eject
+
+                                                               Printing
+
+                                                                              Cash Dispensed /
+                                                                                Print Receipt,
+
+                                                                         Display Cash Dispensed,
+                                                                         Confirm Cash Dispensed
+                                                             Dispensing
+
+                                                                        Insufficient Cash /
+                                                                        Eject
+
+                                                                                                                     Closed Down
+                                                                                                                  Entry / Display
+                                                                                                                  System Down
+
+Figure 10.16. Statechart for ATM Control: Withdraw Funds use case with alternatives
+
+addition to the main sequence for the scenario in which cash is dispensed, there are
+two additional scenarios: withdrawal transaction rejected (transition directly from
+Processing Withdrawal state to Ejecting State) and insufficient cash in ATM (transi-
+tion from Dispensing state to Closed Down State).
+
+10.8.3 Develop Integrated Statechart
+
+The integrated statechart consists of the integration of the use case­based state-
+charts, after consideration of alternatives. Thus, the statecharts depicted in Figures
+10.9 (Validate PIN use case with alternatives) and 10.16 (Withdraw Cash use case
+with alternatives) are combined with the statecharts for the other use cases. This
+statechart would represent the main sequence through each use case together with
+the alternatives.
+
+    Figure 10.17 shows the integrated statechart from the Validate PIN and With-
+draw Cash statecharts, with main and alternatives sequences. The main statechart
+integration point is Waiting for Customer Choice state, the end state for Vali-
+date PIN statechart, and the initial state for Withdraw Funds (and also Transfer
+Funds and Query Account) statechart. However, other statechart integration points
+are the Ejecting and Confiscating states for the alternative scenarios of Validate
+PIN.
+172 Software Modeling
+
+               Cancel / Eject
+
+                                     Card Inserted /              Idle             After (Elapsed Time)
+                                     Get PIN                                       [Closedown Not Requested]
+                                                                Entry /
+Waiting for PIN                                          Display Welcome
+
+                                     Cancel/Eject
+
+PIN Entered /  Invalid PIN /                                                       Terminating
+Validate PIN   Invalid PIN Prompt                                                               Card Ejected /
+                                                                                              Display Ejected
+Validating PIN                        Card Stolen,            Card Confiscated /
+                                     Card Expired /           Display Confiscated    Ejecting
+
+                                       Confiscate,       Confiscating                         Receipt Printed /
+                                     Update Status                                                    Eject
+
+Valid PIN /                          Third Invalid PIN/                              Printing
+Display Menu                         Confiscate
+                                     Cancel / Eject
+
+                                     Cancel /
+                                     Eject
+
+    Waiting for
+Customer Choice
+
+Withdrawal Selected /                Rejected /                                                   Cash Dispensed /
+Request Withdrawal,                  Eject                                                           Print Receipt,
+Display Wait
+                                                    Withdrawal Approved /                    Display Cash Dispensed,
+                         Processing                 Dispense Cash,                           Confirm Cash Dispensed
+                         Withdrawal                 Update Status
+                                                                                   Dispensing
+
+                                                                                              Insufficient Cash /
+                                                                                              Eject
+
+                                                                                      Closed Down
+
+                                                                                   Entry / Display
+                                                                                   System Down
+
+Figure 10.17. Statechart for ATM Control: integrated statechart for Validate PIN and Withdraw
+Funds use case with alternatives
+
+10.8.4 Develop Hierarchical Statechart
+
+It is usually easier to initially develop a flat statechart. After enhancing the flat state-
+chart by considering alternative events, look for ways to simplify the statechart by
+developing a hierarchical statechart. Look for states that can be aggregated because
+they constitute a natural composite state. In particular, look for situations in which
+the aggregation of state transitions simplifies the statechart.
+
+    The hierarchical statechart for ATM Control is shown in Figures 10.18 through
+10.21. Three states on Figure 10.18 are composite states: Processing Customer Input
+(decomposed into three substates on Figure 10.19), Processing Transaction (decom-
+posed into three substates on Figure 10.20), and Terminating Transaction (decom-
+posed into five substates on Figure 10.21). Aggregation of state transitions is the
+main reason for the Processing Customer Input composite state (Figure 10.18). In
+particular, the Cancel event is aggregated into a transition out of the composite
+state instead of the three substates. Aggregation of state transitions is also used for
+the Processing Transaction composite state (Figure 10.19), with the Rejected event
+                                        Closed Down                               After(Elapsed Time)        Insufficient Cash /
+                                                                           [Closedown Was Requested]                 Eject,
+                                      Entry / Display
+                                      System Down                                                                Abort Cash
+                                                                                                                 Dispensed
+
+                                      Startup             Closedown
+
+Card Inserted /                               Idle               After(Elapsed Time)
+    Get PIN                                                 [Closedown Not Requested]
+                                      Entry / Display
+                                      Welcome
+
+Processing                               Card Stolen, Card Expired /                            Terminating
+Customer                                  Confiscate, Update Status                             Transaction
+
+    Input                             Third Invalid PIN / Confiscate
+
+                                                  Cancel / Eject,
+                                                  Display Cancel
+
+                                                              Rejected /
+                                                                 Eject,
+
+                                                          Display Apology
+
+                 Transfer Selected /                                       Transfer Approved /
+                 Request Transfer,                                             Print Receipt,
+                                                                              Update Status
+                     Display Wait
+
+          Query Selected /                     Processing                    Query Approved /
+  Request Query, Display Wait                  Transaction                     Print Receipt,
+                                                                               Update Status
+Withdrawal Selected/
+Request Withdrawal,                                                                         Withdrawal Approved/
+                                                                                                 Dispense Cash,
+     Display Wait                                                                                 Update Status
+
+Figure 10.18. Top-level statechart for ATM Control
+
+                                      Card Inserted /                        Idle
+                                          Get PIN
+                                                                     Entry / Display
+                                                                     Welcome
+
+Processing                Waiting for                       Cancel / Eject,
+Customer                      PIN                           Display Cancel
+Input
+
+                                                                                                Ejecting
+
+            PIN Entered/                  Invalid PIN/
+            Validate PIN              Invalid PIN Prompt
+
+                          Validating PIN                                   Card Stolen, Card Expired /       Confiscating
+                                                                           Confiscate, Update Status
+                                             Valid PIN/
+                                           Display Menu,                         Third Invalid PIN /
+                                           Update Status                              Confiscate
+
+                            Waiting for                              Transfer Selected /
+                             Customer                                Request Transfer,
+
+                              Choice                                     Display Wait
+
+Withdrawal Selected/                  Query Selected /
+Request Withdrawal,                   Request Query,
+
+      Display Wait                      Display Wait
+
+                                  Processing Transaction
+
+Figure 10.19. Statechart for ATM Control: Processing Customer Input composite state
+174 Software Modeling
+
+Waiting for          Transfer Selected /  Processing Transaction                       Rejected /                   Ejecting
+Customer             Request Transfer,                                                    Eject,
+                                                    Processing                                                      Printing
+  Choice                 Display Wait                 Transfer                     Display Apology                Dispensing
+
+                   Query Selected /                 Processing                    Transfer Approved /
+                    Request Query,                      Query               Print Receipt, Update Status
+
+                      Display Wait                  Processing         Query Approved /
+                                                    Withdrawal            Print Receipt,
+             Withdrawal Selected /                                        Update Status
+             Request Withdrawal,
+                                                                     Withdrawal Approved /
+                  Display Wait                                           Dispense Cash,
+                                                                          Update Status
+
+Figure 10.20. Statechart for ATM Control: Processing Transaction composite state
+
+  Closed Down          After(Elapsed Time)[Closedown Was Requested]
+Entry / Display
+System Down            After(Elapsed Time)[Closedown Not Requested]
+
+        Idle           Terminating Transaction
+Entry / Display
+Welcome                                             Terminating
+
+    Processing                                                       Card Confiscated /
+     Customer                                                        Display Confiscated
+
+         Input         Stolen Card, Expired Card /  Confiscating                                 Card Ejected /
+                       Confiscate, Update Status                                                 Display Ejected
+    Processing
+    Transaction           Third Invalid PIN /                        Ejecting                                     Insufficient
+                              Confiscate                                                                            Cash /
+                                                                              Receipt Printed /                      Eject,
+                            Cancel / Eject,                                   Eject                                  Abort
+                            Display Cancel                                                                           Cash
+                                                                     Printing
+                           Rejected / Eject,                                                                      Dispensed
+                           Display Apology
+
+                          Transfer Approved /
+                              Print Receipt,
+                              Update Status
+
+                          Query Approved /
+                             Print Receipt,
+                            Update Status
+
+                       Withdrawal Approved /                                       Cash Dispensed /
+                           Dispense Cash,                                          Print Receipt,
+                           Update Status                                           Display Cash Dispensed,
+                                                                                   Confirm Cash Dispensed
+
+                                                                     Dispensing
+
+Figure 10.21. Statechart for ATM Control: Terminating Transaction composite state
+                                                                                           Finite State Machines 175
+
+aggregated from a transition out of each substate to a transition out of the composite
+state. In the case of the Terminating Transaction composite state, it contains substates
+that deal with finishing the transaction, such as dispensing cash, printing the receipt,
+and ejecting the ATM card. It also has substates for canceling the transaction
+and terminating the transaction. This statechart is described in more detail in
+Section 21.6.
+
+10.9 SUMMARY
+
+This chapter described the characteristics of flat statecharts and hierarchical state-
+charts. Guidelines for developing statecharts were given. The process of developing
+a statechart from a use case was then described in detail. It is possible for a state-
+chart to support several use cases, with each use case contributing to some subset
+of the statechart. Such cases can also be addressed by considering the statechart in
+conjunction with the object interaction model, in which a state-dependent control
+object executes the statechart, as described in Chapter 11. Examples of statecharts
+are also given in the Banking System and Automated Guided Vehicle System case
+studies.
+
+EXERCISES                                          (c) An action that starts executing
+                                                        when the state is entered and com-
+Multiple-choice questions: For each ques-               pletes executing when the state is
+tion, choose one of the answers.                        left
+
+ 1. What is a state in a state machine?           (d) An action that executes as a result
+     (a) A recognizable situation that exists           of a state transition
+           over an interval of time
+     (b) A condition that is True or False     5. What is an exit action in a state
+     (c) An input from the external envi-         machine?
+           ronment                                 (a) An action that is performed when
+     (d) An output from the system                      the state is entered
+                                                  (b) An action that is performed when
+ 2. What is an event in a state machine?                the state is left
+     (a) A discrete signal that causes a           (c) An action that starts executing
+           change of state                              when the state is entered and com-
+     (b) An input from the external envi-               pletes executing when the state is
+           ronment                                      left
+     (c) An input that is True or False           (d) An action that executes as a result
+     (d) The result of a state transition               of a state transition
+
+ 3. What is an action in a state machine?      6. What is a condition used for in a state
+     (a) An occurrence at a point in time         machine?
+     (b) A cause of a state transition             (a) A conditional action
+     (c) An interval between two successive       (b) A conditional state
+           events                                  (c) A conditional state transition
+     (d) A computation that executes as a         (d) A conditional event
+           result of a state transition
+                                               7. What is a state transition into a compos-
+ 4. What is an entry action in a state            ite state equivalent to?
+     machine?                                      (a) A transition into only one of the
+     (a) An action that is performed when               substates
+           the state is entered                   (b) A transition into each of the sub-
+     (b) An action that is performed when               states
+           the state is left
+176 Software Modeling
+
+    (c) A transition into none of the sub-         (b) Composite states are composed
+         states                                          into substates.
+
+   (d) A transition into any one of the            (c) A composite state transitions to a
+         substates                                       substate.
+
+8. What is a state transition out of a com-        (d) A substate transitions to a compos-
+   posite state equivalent to?                           ite state.
+    (a) A transition out of only one of the
+         substates                            10. If two actions are shown on a given
+   (b) A transition out of each of the sub-        state transition, which of the following
+         states                                    is true?
+    (c) A transition out of none of the sub-       (a) The two actions are dependent on
+         states                                          each other.
+   (d) A transition out of any one of the          (b) The two actions are independent of
+         substates                                       each other.
+                                                   (c) One action provides an input to the
+9. How does a composite state relate to a                other action.
+   substate?                                       (d) The second action executes when
+    (a) A composite state is decomposed                  the first action completes execu-
+         into substates.                                 tion.
+ 11
+
+State-Dependent Dynamic
+Interaction Modeling
+
+State-dependent dynamic interaction modeling deals with situations in which object
+interactions are state-dependent. State-dependent interactions involve at least one
+state-dependent control object that, by executing a statechart (as described in Chap-
+ter 10), provides the overall control and sequencing of its interactions with other
+objects.
+
+    Chapter 9 describes basic dynamic interaction modeling, which is stateless and,
+hence, does not involve any state-dependent interactions. During object structur-
+ing, the objects that participate in the realization of a use case are determined. If at
+least one of the objects is a state-dependent control object, then the interaction is
+defined as state-dependent and the term state-dependent dynamic interaction mod-
+eling should be used, as described in this chapter. State-dependent dynamic interac-
+tion modeling is a strategy to help determine how objects interact with each other in
+dynamic interactions involving at least one state-dependent control object. In more
+complex interactions, it is possible to have more than one state-dependent control
+object. Each state-dependent control object is defined by means of a statechart.
+
+    Section 11.1 describes the steps in state-dependent dynamic interaction mod-
+eling. Section 11.2 describes how to model interaction scenarios on interaction
+(both communication and sequence) diagrams and statecharts. Section 11.3 gives a
+detailed example of state-dependent dynamic interaction modeling from the Bank-
+ing System.
+
+11.1 STEPS IN STATE-DEPENDENT DYNAMIC
+INTERACTION MODELING
+In state-dependent dynamic interaction modeling, the objective is to determine the
+interactions among the following objects:
+
+ The state-dependent control object, which executes the state machine
+ The objects, usually software boundary objects, which send events to the control
+
+    object. These events cause state transitions in the control object's internal state
+    machine.
+
+                                                                                                                             177
+178 Software Modeling
+
+           The objects that provide the actions and activities, which are triggered by the
+             control object as a result of the state transitions
+
+           Any other objects that participate in realizing the use case
+
+         The interaction among these objects is depicted on a communication diagram or
+         sequence diagram.
+
+             The main steps in the state-dependent dynamic interaction modeling strategy
+         are presented in the following list. The sequence of interactions needs to reflect the
+         main sequence of interactions described in the use case.
+
+             1. Determine the boundary object(s). Consider the objects that receive the
+                 inputs sent by the external objects in the external environment.
+
+             2. Determine the state-dependent control object. There is at least one control
+                 object, which executes the statechart. Others might also be required.
+
+             3. Determine the other software objects. These are software objects that interact
+                 with the control object or boundary objects.
+
+             4. Determine object interactions in the main sequence scenario. Carry out this
+                 step in conjunction with step 5 because the interaction between the state-
+                 dependent control object and the statechart it executes needs to be deter-
+                 mined in detail.
+
+             5. Determine the execution of the statechart.
+             6. Consider alternative sequence scenarios. Perform the state-dependent
+
+                 dynamic analysis on scenarios described by the alternative sequences of the
+                 use case.
+
+        11.2 MODELING INTERACTION SCENARIOS USING INTERACTION
+        DIAGRAMS AND STATECHARTS
+
+         This section describes how interaction diagrams ­ in particular, communication
+         diagrams and sequence diagrams ­ can be used with statecharts to model state-
+         dependent interaction scenarios (steps 4 and 5 above).
+
+             A message on an interaction diagram consists of an event and the data that
+         accompany the event. Consider the relationship between messages and events in
+         the case of a state-dependent control object that executes a statechart. When a mes-
+         sage arrives at the control object on a communication diagram, the event part of the
+         message causes the state transition on the statechart. The action on the statechart
+         is the result of the state transition and corresponds to the output message depicted
+         on the communication diagram. In general, a message on an interaction diagram
+         (communication or sequence diagram) is referred to as an event on a statechart; in
+         descriptions of state-dependent dynamic scenarios, however, for conciseness only
+         the term event is used.
+
+             A source object sends an event to the state-dependent control object. The arrival
+         of this input event causes a state transition on the statechart. The effect of the state
+         transition is one or more output events. The state-dependent control object sends
+         each output event to a destination object. An output event is depicted on the state-
+         chart as an action, which can be a state transition action, an entry action, or an exit
+         action.
+                                                        State-Dependent Dynamic Interaction Modeling 179
+
+    To ensure that the communication diagram and statechart are consistent with
+each other, the equivalent communication diagram message and statechart event
+must be given the same name. Furthermore, for a given state-dependent scenario
+it is necessary to use the same message-numbering sequence on both diagrams.
+Using the same sequence ensures that the scenario is represented accurately on both
+diagrams and can be reviewed for consistency. These issues are illustrated in the
+following section.
+
+11.3 EXAMPLE OF STATE-DEPENDENT DYNAMIC INTERACTION
+MODELING: BANKING SYSTEM
+
+As an example of state-dependent dynamic interaction modeling, consider the fol-
+lowing example from the Banking System, the Validate PIN use case. The objects
+that participate in the realization of this use case are determined by using the object
+structuring criteria (described in Chapter 8). First, the main sequence is considered,
+followed by the alternative sequences.
+
+11.3.1 Determine Main Sequence
+
+Consider the main sequence of the Validate PIN use case. It describes the customer
+inserting the ATM card into the card reader, the system prompting for the PIN,
+and the system checking whether the customer-entered PIN matches the PIN main-
+tained by the system for that ATM card number. In the main sequence, the PIN
+number is valid.
+
+    Consider the objects needed to realize this use case. We first determine the need
+for the Card Reader Interface object to read the ATM card. The information read off
+the ATM card needs to be stored temporarily, so we identify the need for an entity
+object to store the ATM Card information. The Customer Interaction object is used
+for interacting with the customer via the keyboard/display ­ in this case, to prompt
+for the PIN. The information to be sent to the Banking Service subsystem for PIN
+validation is stored in an ATM Transaction. For PIN validation, the transaction infor-
+mation needs to contain the PIN number and the ATM card number. To control the
+sequence in which actions take place, we identify the need for a control object, ATM
+Control. Because the actions of this control object vary depending on what happened
+previously, the control object needs to be state-dependent and, therefore, execute a
+statechart.
+
+    This use case starts when the customer inserts the ATM card into the card
+reader. The message sequence number starts at 1, which is the first external event
+initiated by the Customer Actor, as described in the Validate PIN use case. Sub-
+sequent numbering in sequence, representing the objects in the system reacting to
+the actor, is 1.1, 1.2, 1.3, ending with 1.4, which is the system's response displayed to
+the actor. The next input from the actor is the external event, numbered 2, and so
+on. The scenario for a valid ATM card and PIN card is shown as a communication
+diagram in Figure 11.1 and as a sequence diagram in Figure 11.2.
+
+    The message sequencing on the object interaction diagrams is faithful to the use
+case description for the main sequence of the use case. The message sequence from
+1 to 1.4 starts with the card being read by the Card Reader Interface (message 1),
+180 Software Modeling
+
+                                                                                                                                        «subsystem»
+                                                                                                                                      : BankingService
+
+               «external I/O    1: Card       «subsystem»                                                         2.6: Validate PIN                2.7 [Valid]:
+                  device»       Reader        : ATMClient                                                         (PIN Validation Transaction)     Valid PIN
+                                Input                                                                                                              (Account #s)
+               : CardReader                                     «I/O»                                             1.2: Card Inserted
+                                                           : CardReader
+
+                                                              Interface
+
+                                              1.1: Card Id,                                    2.5: PIN Entered                       «state dependent
+                                              Start Date,                                      (PIN Validation Transaction)                 control»
+                                              Expiration Date
+                                                                                                                                        : ATMControl
+                                                                 «entity»
+                                                               : ATMCard
+
+                                                  2.2: Card Id,                                2.1: Card                1.3: Get PIN,              2.8a: Update
+                                                  Start Date,                                  Request                  2.8: Display Menu          Status (PIN Valid)
+                                                  Expiration Date                                                       (Account #s)
+                          1.4: PIN Prompt,
+                          2.9: Selection Menu
+
+               «external user»                «user interaction»                                          2.3: Card Id, PIN,
+               : ATMCustomer                      : Customer                                              Start Date, Expiration Date
+               KeypadDisplay                      Interaction
+                                                                                                                                                      «entity»
+                                                                                                                                               : ATMTransaction
+
+                                2: PIN Input                                                   2.4: PIN Validation Transaction
+
+                                                 PIN Validation Transaction = {transactionId, transactionType, cardId, PIN, startDate, expirationDate}
+
+               Figure 11.1. Communication diagram for Validate PIN use case: Valid PIN scenario
+
+«external I/O  «external             «I/O»      «entity»                                       «state dependent   «user interaction»        «entity»                «subsystem»
+   device»       user»          : CardReader  : ATMCard                                              control»         : Customer      : ATMTransaction            : BankingService
+                 : ATM                                                                                                Interaction
+: CardReader                       Interface                                                     : ATMControl
+               Customer
+                Keypad
+                Display
+
+sd PIN Validation                                                                                         1.3: Get PIN
+
+                 1: Card Reader Input
+                                              1.1: Card Id, Start Date, Expiration Date
+                                                                       1.2: Card Inserted
+
+                                                                              1.4: PIN Prompt
+
+                                              2: PIN Input
+
+                                                                                               2.1: Card Request
+
+                                              2.2: Card Id, Start Date, Expiration Date
+                                                                                          2.3: Card Id, PIN, Start Date, Expiration Date
+                                                                                                  2.4: PIN Validation Transaction
+
+                                                                   2.5: PIN Entered (PIN Validation Transaction)
+
+                                                                                                                  2.6: Validate PIN (PIN Validation Transaction)
+
+                                                                                                                                      2.7 [Valid]: Valid PIN (Account #s)
+
+                                                                                               2.8: Display Menu (Account #s)
+
+                                                                                                                  2.8a: Update Status (PIN Valid)
+
+                                              2.9: Selection Menu
+
+Figure 11.2. Sequence diagram for Validate PIN use case: Valid PIN scenario
+                      State-Dependent Dynamic Interaction Modeling 181
+
+1.2: Card Inserted /           Idle
+1.3: Get PIN
+                             Entry /
+                      Display Welcome
+
+                           Waiting for PIN
+
+    2.5: PIN Entered /
+    2.6: Validate PIN
+
+                           Validating PIN
+
+      2.7 [Valid]: Valid PIN /
+      2.8: Display Menu,
+      2.8a: Update Status
+
+                              Waiting for
+                         Customer Choice
+
+Figure 11.3. Validate PIN statechart: Valid PIN scenario
+
+followed by card data stored (1.1), sending the card inserted event to the ATM Con-
+trol object (1.2), which results in the state change and the Get PIN action (1.3) sent to
+Customer Interaction, which outputs the PIN prompt to the customer display (1.4).
+The message sequence from 2 to 2.9 starts with the user entering the PIN (message
+2) to Customer Interaction, followed by retrieving card data (2.1, 2.2), preparing PIN
+Validation transaction (2.3, 2.4), and sending the transaction to ATM Control (2.5)
+and from there to Banking Service (2.6). The message sequence from 1 through 2.6
+is grouped into a PIN Validation segment on the sequence diagram (shown in the
+box entitled sd PIN Validation) in Figure 11.2 for future reference. In this scenario,
+the Banking Service sends a Valid PIN response (message 2.7) to ATM Control, which
+eventually leads to Customer Interaction displaying the selection menu to the cus-
+tomer (2.8 and 2.9).
+
+    A message arriving at the ATM Control object causes a state transition on the
+ATM Control statechart (Figure 11.3). For example, Card Reader Interface sends the
+Card Inserted message (message 1.2 in Figures 11.1 and 11.2) to ATM Control. As a
+result of this Card Inserted event (event 1.2 corresponds to message 1.2 in Figures
+11.1 and 11.2, with the number 1.2 emphasizing the correspondence between the
+message and the event), the ATM Control statechart transitions from Idle state (the
+initial state) to Waiting for PIN state. The output event associated with this transition
+is Get PIN (event 1.3). This output event corresponds to message 1.3, Get PIN, sent by
+ATM Control to Customer Interaction.
+
+    A concurrent sequence is shown in Figure 11.1 with messages 2.8 and 2.8a. ATM
+Control sends these two messages at the same state transition, so the two message
+sequences may execute concurrently, one to Customer Interaction and the other to
+ATM Transaction.
+182 Software Modeling
+
+             The message sequence description, which describes the messages on the commu-
+         nication diagram (see Figure 11.1) and the messages on the sequence diagram (see
+         Figure 11.2), is described in the Banking System case study in Section 21.5.
+
+        11.3.2 Determine Alternative Sequences
+
+         Next, consider the alternative sequences of the Validate PIN use case. The main
+         sequence, as described in the previous section, assumes that the ATM card and PIN
+         are valid. Consider the various alternatives of the Validate PIN use case in dealing
+         with invalid cards and incorrect PIN numbers. These can be determined from the
+         Alternatives section of the use case (given in full in Chapter 21).
+
+             Consider the Validate Pin message sent to the Banking Service (message 2.6).
+         Several alternative responses are possible from the Banking Service. At the stage in
+         the message sequencing where alternative sequences are possible, each alternative
+         sequence is shown with a different uppercase letter. Thus, the alternative messages
+         to message 2.7 Valid PIN are messages 2.7A, 2.7B, 2.7C. Each of these alternative
+         scenarios can be depicted on a separate interaction diagram. Consider the main and
+         alternative scenarios as described in the following sections.
+
+        11.3.3 Main Sequence: Valid PIN
+
+         A valid card and PIN were entered. This case, which corresponds to the main
+         sequence, is given the condition [Valid]:
+
+             2.7 [Valid]: Valid PIN
+
+             In this case, the Banking Service sends the Valid PIN message. The main scenario
+         is depicted on the interaction diagrams (see Figures 11.1 and 11.2) and statechart
+         (see Figure 11.3).
+
+        11.3.4 Alternative Sequence: Invalid PIN
+
+         An incorrect PIN was entered. This alternative is given the condition [Invalid]:
+             2.7A [Invalid]: Invalid PIN
+
+             In this case, the Banking Service sends the Invalid PIN message.
+             Figure 11.4 depicts on a sequence diagram the alternative scenario of an invalid
+         PIN entered. Messages in the message sequence 1 through 2.6 (originally shown in
+         Figure 11.2) are unchanged and are inside the PIN Validation segment in Figure
+         11.4. In the Invalid PIN scenario, the guard condition [Invalid] is true, indicating
+         that message 2.7A: Invalid PIN is sent from the Banking Service. The use of the 
+         indicates that the Invalid PIN message may be sent more than once (in this scenario,
+         it can be sent twice). The iteration of messages, namely, the sequence 2.7A through
+         2.7A.11 (Invalid PIN through to resend Validate PIN message), is inside the loop
+         segment on Figure 11.4. If an Invalid PIN message is sent a second time, the sequence
+         of messages from 2.7A through 2.7A.11 is repeated.
+             The scenario shown in Figure 11.4 is for the user to enter the correct PIN number
+         on the second or third attempt. In this case, the response from the Banking Service
+                                                                          State-Dependent Dynamic Interaction Modeling 183
+
+«external I/O       «external user»       «I/O»                 «entity»  «state dependent  «user interaction»        «entity»                                   «subsystem»
+   device»                : AT M     : CardReader             : ATMCard         control»        : Customer      : ATMTransaction                                : BankingService
+                                                                                                Interaction
+: CardReader           Customer         Interface                           : ATMContro l
+                         Keypad
+                         Display
+
+ref PIN Validation
+
+                    loop             [Invalid PIN AND i < 3]                                                  2.7A* [Invalid]: Invalid PIN
+                                                                                            2.7A.1: Update Status
+
+                                                                                                2.7A.2: Invalid PIN
+
+                                                                          2.7A.3: Invalid PIN Prompt
+
+                                                   2.7A.4: Invalid PIN Prompt
+                                                      2.7A.5: PIN Input
+                                                                             2.7A.6: Card Request
+                                                             2.7A.7: Card Id, Start Date, Expiration Date
+                                                                                                           2.7A.8: Card Id, Start Date, Expiration Date, PIN
+                                                                                                                 2.7A.9: PIN Validation Transaction
+                                                                      2.7A.10: PIN Entered (PIN Validation Transaction)
+                                                                                                       2.7A.11: Validate PIN (PIN Validation Transaction)
+
+                                                                                                                           2.7 [Valid]: Valid PIN (Account #s)
+                                                                                        2.8: Display Menu (Account #s)
+
+                                                                                                                2.8a: Update Status (PIN Valid)
+                                                              2.9: Selection Menu
+
+Figure 11.4. Sequence diagram for Validate PIN use case: Invalid PIN scenario
+
+is Pin Valid and the guard condition [Valid] is true. The message sequence from 2.7
+to 2.9 at the bottom of Figure 11.4 is the same as that shown in Figure 11.2.
+
+11.3.5 Alternative Sequence: Third Invalid PIN
+
+An incorrect PIN was entered three times. This alternative sequence is also given
+the condition [Invalid]. However, it is then determined at the ATM Client, which
+maintains the invalid PIN count in the ATM Transaction entity object, that the
+count has reached three; consequently, this is the Third Invalid PIN scenario.
+
+    2.7B [Third Invalid]: Third Invalid PIN
+
+    In this scenario, the Banking Service sends the Invalid PIN message to ATM Control
+three times.
+
+    The Third Invalid PIN scenario starts on the sequence diagram (Figure 11.5)
+with the message sequence for the PIN validation segment followed by looping twice
+in the loop segment, which starts with the Invalid PIN message (2.7A) from Banking
+Service. The Update Status message (2.7A.1) to ATM Transaction is followed by a
+response that indicates the PIN Status is Invalid PIN (2.7A.2), looping twice. This is
+followed by an exit from the loop and then a third 2.7A: Invalid PIN message from
+Banking Service. This time the response to the Update Status message (2.7A.1) is
+2.7B [Third Invalid]: Third Invalid PIN, because the Third Invalid condition is True,
+in which case the card is confiscated (message sequence 2.7B­2.7B.2).
+184 Software Modeling
+
+«external I/O       «external user»       «I/O»                 «entity»  «state dependent  «user interaction»        «entity»                                    «subsystem»
+   device»                : AT M     : CardReader             : ATMCard         control»        : Customer      : ATMTransaction                                 : BankingService
+                                                                                                Interaction
+: CardReader           Customer         Interface                           : ATMControl
+                         Keypad
+                         Display
+
+ref PIN Validation
+
+                    loop             [Invalid PIN AND i < 3]                                                  2.7A* [Invalid]: Invalid PIN
+                                                                                            2.7A.1: Update Status
+
+                                                                                                2.7A.2: Invalid PIN
+
+                                                                          2.7A.3: Invalid PIN Prompt
+
+                                                      2.7A.4: Invalid PIN Prompt
+                                                         2.7A.5: PIN Input
+                                                                                2.7A.6: Card Request
+                                                                2.7A.7: Card Id, Start Date, Expiration Date
+                                                                                                              2.7A.8: Card Id, Start Date, Expiration Date, PIN
+                                                                                                                    2.7A.9: PIN Validation Transaction
+                                                                         2.7A.10: PIN Entered (PIN Validation Transaction)
+                                                                                                          2.7A.11: Validate PIN (PIN Validation Transaction)
+
+                                                                                                    2.7A [Invalid]: Invalid PIN
+                                                                                 2.7A.1: Update Status
+                                                                          2.7B [ThirdInvalid]: Third Invalid PIN
+
+                                                      2.7B.1: Confiscate
+
+               2.7B.2: Confiscate Card
+
+Figure 11.5. Sequence diagram for Validate PIN use case: Third invalid PIN scenario
+
+11.3.6 Alternative Sequence: Stolen or Expired Card
+
+The card was stolen or the card has expired.
+
+    2.7C [Stolen OR expired]: Card stolen, Card expired
+
+    In the case of either a stolen card or an expired card, the message sequence is
+the same, resulting in confiscation of the card.
+
+    This alternative sequence is depicted on the sequence diagram in Figure 11.6.
+It depicts when the ATM card has expired or been reported as stolen (message
+sequence 2.7C­2.7C.2). These two scenarios are handled in the same way: Banking
+
+«external I/O       «external user»          «I/O»              «entity»  «state dependent  «user interaction»        «entity»                                    «subsystem»
+   device»                : ATM         : CardReader          : ATMCard         control»        : Customer      : ATMTransaction                                 : BankingService
+                                                                                                Interaction
+: CardReader           Customer            Interface                        : ATMControl
+                         Keypad
+                         Display
+
+ref PIN Validation
+
+                                                      2.7C.1: Confiscate                     2.7C [Stolen OR Expired]: Card Stolen, Card Expired
+                                                                                            2.7C.1a: Update Status
+               2.7C.2: Confiscate Card
+
+Figure 11.6. Sequence diagram for Validate PIN use case: Stolen or expired card scenario
+                                                        State-Dependent Dynamic Interaction Modeling 185
+
+Service sends the Card stolen or Card expired message (2.7C) to ATM Control, which
+in turn sends a Confiscate message (2.7C.1) to Card Reader Interface, which results in
+the confiscation of the ATM card.
+
+11.3.7 Generic Interaction Diagram with all Scenarios
+
+It is possible to show all these alternatives on a generic interaction diagram, either
+on a generic communication diagram (Figure 11.7) or generic sequence diagram.
+The generic communication diagram for the use case covers the main sequence
+as well as all the alternative sequences. Although all the alternatives are shown
+on the same diagram, resulting in a compact depiction of the object interactions,
+the generic diagram is more difficult to read than single scenario diagrams, which
+depict each scenario (main or alternative) separately. A generic communication or
+sequence diagram (depicting all the alternatives) should be used only if the alterna-
+tives can be clearly depicted. If the generic communication or sequence diagram is
+too cluttered, use a separate communication diagram or sequence diagram for each
+alternative.
+
+11.3.8 Sequencing on Control Object and Statechart
+
+The control object ATM Control, shown in Figures 11.1 through 11.7, executes the
+statecharts depicted in Figure 11.8 and Figure 11.9 (which depicts the substates of
+the Validating PIN composite state). The statechart shows the various states during
+the execution of the main and alternative sequences of the Validate PIN use case.
+Thus, when the PIN Entered event (event 2.5) is received from Customer Interaction,
+ATM Control transitions to Validating PIN composite state (Validating PIN and Card
+substate) and sends the Validate PIN message to the Banking Service. The possible
+responses from the Banking Service are shown in Figure 11.7. The resulting states
+and actions are shown in Figures 11.8 and 11.9, and the resulting interactions with
+the controlled objects are shown in Figure 11.7. The Valid PIN response (event 2.7)
+results in a transition to Waiting for Customer Choice. The Invalid PIN response (event
+2.7A) results in transitioning of the statechart to the Checking PIN Status substate
+(Figure 11.9). A second Invalid PIN response (event 2.7A.1) results in the transition
+back to the Waiting for PIN state and triggering of the Invalid PIN Prompt action (event
+2.7A.3) in the Customer Interaction object. The Third Invalid PIN (2.7B) response
+results in transitioning of the statechart to the Confiscating state and triggering of
+the Confiscate action (event 2.7B.1) in the Card Reader Interface object. A Card Stolen
+response (event 2.7C) is treated in the same way. Finally, if the customer decides
+to Cancel (event 2A.1) instead of re-entering the PIN, the statechart transitions to
+Ejecting state and triggers the Eject action (event 2A.2) in the Card Reader Interface
+object. Because the customer can Cancel while ATM Control is in any of the substates
+Waiting for PIN, Validating PIN, or Waiting for Customer Choice, the state transition is
+shown out of the composite state Processing Customer Input (Figure 11.8.)
+
+    The statechart also initiates concurrent action sequences, which are triggered
+at the same state transition. Thus, all actions that occur at a given transition are
+executed in an unconstrained, nondeterministic order. For example, the actions 2.8:
+186
+
+                                                                                                                  «subsystem»
+                                                                                                                : BankingService
+
+     «external I/O            1: Card Reader       «subsystem»                         2.6, 2.7A.11:                       2.7 [Valid]: Valid PIN,
+        device»               Input                : ATMClient                         Validate PIN                        2.7A* [Invalid]: Invalid PIN,
+                                                                                       (PIN Validation Transaction)        2.7C [Stolen OR Expired]:
+     : CardReader     2.7B.2, 2.7C.2:                                  «I/O»                                               Card Stolen, Card Expired
+                      Confiscate Card,                           : CardReader     1.2: Card Inserted
+                      1.1A [Card not recognized]:
+                      Eject Card,                                    Interface
+                      2A.3: Eject Card
+                                                   1.1[Card
+
+                                                   recognized]:                  2.7B.1, 2.7C.1:                «state dependent
+                                                   Card Input Data               Confiscate,                          control»
+                                                                                 2A.2: Eject
+                                                                                                                  : ATMControl
+
+                                                             «entity»
+
+                                                             : ATMCard 2.5, 2.7A.10: PIN Entered                2.7A.1,
+
+                                                                                 (PIN Validation Transaction),  2.7C.1a,
+
+                                                                                 2A.1: Cancel                   2.8a:
+
+                                                   2.2,             2.1,                                           Update  2.7A.2 [Invalid]:
+                                                   2.7A.7:          2.7A.6:                                        Status  Invalid PIN,
+                                                   Card Id,         Card Request                                           2.7B [ThirdInvalid]:
+                                                   Start Date,                                    1.3: Get PIN,            Third Invalid PIN
+                                                   Expiration Date                                2.7A.3: Invalid PIN
+                      1.4: PIN Prompt,                                                            Prompt,
+                      2.7A.4: Invalid PIN Prompt,
+                      2.9: Selection Menu,                                                        2.8: Display Menu,
+                      2A.2a.1: Cancel Prompt
+                                                                                  2.3, 2.7A.8: 2A.2a: Display Cancel
+                         2, 2.7A.5: PIN Input,
+     «external user»     2A: Cancel Input                    «user interaction»   Card Id, Start Date,
+     : ATMCustomer                                               : Customer       Expiration Date, PIN
+     KeypadDisplay                                               Interaction
+                                                                                                                      «entity»
+                                                                                                                : ATMTransaction
+
+                                                                                 2.4, 2.7A.9:
+
+                                                                                 PIN Validation Transaction
+
+     Figure 11.7. Communication diagram for Validate PIN use case: generic form showing alternatives
+                                      State-Dependent Dynamic Interaction Modeling 187
+
+            1.2: Card Inserted /             Idle
+            1.3: Get PIN                    Entry /
+                                      Display Welcome
+Processing
+Customer Input                                                     2A.1: Cancel /
+                                                                     2A.2: Eject,
+
+                                                               2A.2a: Display Cancel
+
+                Waiting for PIN                                                                      Ejecting
+
+2.5, 2.7A.10: PIN Entered /           2.7A.2: Invalid PIN/
+2.6, 2.7A.11: Validate PIN            2.7A.3: Invalid PIN Prompt
+
+                                                                  2.7B: Third Invalid PIN /
+                                                                     2.7B.1: Confiscate
+
+                Validating PIN                                                                       Confiscating
+
+            2.7 [Valid]: Valid PIN /                              2.7C: Card Stolen, Card Expired /
+            2.8: Display Menu,                                            2.7C.1: Confiscate,
+            2.8a: Update Status
+                                                                        2.7C.1a: Update Status
+
+                   Waiting for
+                Customer Choice
+
+Figure 11.8. Statechart for ATM Control for Validate PIN use case, showing alternatives
+
+Display Menu and 2.8a: Update Status, which result from the Valid Pin state transition
+(see Figure 11.8), execute concurrently, as also depicted in Figure 11.7.
+
+11.4 SUMMARY
+This chapter described state-dependent interaction modeling, in which object inter-
+actions are state-dependent. A state-dependent interaction involves at least one
+
+                Waiting for
+                    PIN
+
+2.5, 2,7A.10: PIN Entered /           2.7A.2: Invalid PIN /
+2.6, 2,7A.11: Validate PIN            2.7A.3: Invalid PIN Prompt
+
+Validating
+PIN
+
+                2.7A: Invalid PIN /                                   2.7B: Third Invalid PIN /
+                                                                          2.7B.1: Confiscate
+Validating PIN 2.7A.1: Update Status Checking PIN                                                    Confiscating
+                                                                  2.7C: Card Stolen, Card Expired /
+and Card                              Status                               2.7C.1: Confiscate,
+
+                                                                        2.7C.1a: Update Status
+
+                      2.7[Valid]: Valid PIN /
+                      2.8: Display Menu,
+                      2.8a: Update Status
+
+               Waiting for
+               Customer
+
+                 Choice
+
+Figure 11.9. Statechart for ATM Control Validating PIN composite state
+188 Software Modeling
+
+         state-dependent control object, which executes a statechart (as described in Chap-
+         ter 10) that provides the overall control and sequencing of the interactions. This
+         chapter built on the stateless dynamic interaction modeling, described in Chapter 9,
+         which does not involve any state-dependent interactions.
+
+EXERCISES                                        (c) The main sequence and a represen-
+                                                      tative alternative sequence of the
+Multiple-choice questions: For each ques-             use case
+tion, choose one of the answers.
+                                                (d) The alternative sequences of the
+ 1. What does a state-dependent interac-              use case
+     tion involve?
+      (a) A control object                   6. Which of the following could happen on
+     (b) A state-dependent entity object        an interaction diagram?
+      (c) A state-dependent control object       (a) A state-dependent control object
+     (d) A state-dependent user interaction           sends a message to an entity object.
+           object                               (b) A state-dependent control object
+                                                      sends a message to a coordinator
+ 2. Which kind of object executes a state             object.
+     machine                                     (c) A state-dependent control object
+      (a) Any software object                         sends a message to a printer object.
+     (b) An entity object                       (d) All of the above
+      (c) A state-dependent control object
+     (d) A statechart                        7. If the same state machine is used in
+                                                more than one use case, how is this
+ 3. An input message to a state-dependent       modeled on interaction diagrams?
+     control object corresponds to:              (a) Develop one state-dependent con-
+      (a) An event on the internal state              trol object for each use case.
+           machine                              (b) Develop one state-dependent con-
+     (b) An action on the internal state              trol object containing states from
+           machine                                    each use case.
+      (c) A condition on the internal state      (c) Develop a hierarchical state
+           machine                                    machine.
+     (d) A state on the internal state          (d) Develop a coordinator object.
+           machine
+                                             8. How would two state-dependent con-
+ 4. An output message from a state-             trol objects communicate with each
+     dependent control object corresponds       other?
+     to:                                         (a) By sending messages to each other
+      (a) An event on the internal state        (b) By transitioning to the same state
+           machine                               (c) Through an entity object
+     (b) An action on the internal state        (d) Through a proxy object
+           machine
+      (c) A condition on the internal state  9. An object can send alternative mes-
+           machine                              sages a or b to a state-dependent con-
+     (d) A state on the internal state          trol object. How is this handled in the
+           machine                              state machine?
+                                                 (a) One state with a different transi-
+ 5. An interaction diagram should be                  tion out of it for each incoming
+     developed for:                                   message
+      (a) Only the main sequence of the use     (b) One state for each of the alterna-
+           case                                       tive messages
+     (b) The main sequence and every             (c) A composite state to handle the
+           alternative sequence of the use            alternative messages
+           case                                 (d) A substate for each alternative
+                                                      message
+State-Dependent Dynamic Interaction Modeling 189
+
+10. In a system in which a client object exe-    (b) The service has a state-dependent
+     cutes a state machine and communi-               control object but the client does
+     cates with a service, which of the follow-       not.
+     ing is true?
+     (a) The client has a state-dependent        (c) Both the client and the service have
+           control object but the service does        state-dependent control objects.
+           not.
+                                                 (d) Neither the client nor the ser-
+                                                      vice has a state-dependent control
+                                                      object.
+PART III
+
+Architectural Design
+ 12
+
+Overview of Software Architecture
+
+The software architecture separates the overall structure of the system, in terms of
+subsystems and their interfaces, from the internal details of the individual subsys-
+tems. A software architecture is structured into subsystems, in which each subsys-
+tem should be relatively independent of other subsystems. This chapter presents an
+overview of software architecture, which is also referred to as a high- level design.
+The concepts of software architecture and multiple views of a software architecture
+were first introduced in Chapter 1. The concepts of design patterns, components,
+and interfaces were introduced in Chapter 4.
+
+    In this chapter, Section 12.1 describes the concepts of software architecture and
+component-based software architecture. Section 12.2 then describes how having
+multiple views of a software architecture helps with both its design and understand-
+ing. Section 12.3 introduces the concept of software architectural patterns as a basis
+for developing software architectures, whereas Section 12.4 describes how to docu-
+ment such patterns. Section 12.5 describes the concept of software components and
+interfaces. Finally, Section 12.6 provides an overview of designing software archi-
+tectures, as described in Chapters 14 through 20.
+
+12.1 SOFTWARE ARCHITECTURE AND COMPONENT-BASED
+SOFTWARE ARCHITECTURE
+A software architecture is defined by Bass, Clements, and Kazman (2003) as follows:
+
+    "The software architecture of a program or computing system is the structure or
+    structures of the system, which comprise software elements, the externally visible
+    properties of those elements, and the relationships among them."
+
+    Thus, a software architecture is considered primarily from a structural per-
+spective. In order to fully understand a software architecture, however, it is also
+necessary to study it from several perspectives, including both static and dynamic
+perspectives, as described in Section 12.2. It is also necessary to address the architec-
+ture from functional (functionality provided by the architecture) and nonfunctional
+
+                                                                                                                             193
+194 Architectural Design
+
+         perspectives (quality of the functionality provided). The software quality attributes
+         of an architecture are described in Chapter 20.
+
+        12.1.1 Component-Based Software Architecture
+
+         A structural perspective on software architecture is given by the widely held concept
+         of component-based software architecture. A component-based software architec-
+         ture consists of multiple components in which each component is self-contained
+         and encapsulates certain information. A component is either a composite object
+         composed of other objects or a simple object. A component provides an inter-
+         face through which it communicates with other components. All information that
+         is needed by one component to communicate with another component is contained
+         in the interface, which is separate from the implementation. Thus, a component can
+         be considered a black box, because its implementation is hidden from other compo-
+         nents. Components communicate with each other in different ways using predefined
+         communication patterns.
+
+             A sequential design is a program in which the components are classes and com-
+         ponent instances are objects (instances of the classes); the components are passive
+         classes without a thread of control. A component is self-contained; therefore, it can
+         be compiled separately, stored in a library, and then subsequently instantiated and
+         linked into an application. In a sequential design, the only communication pattern
+         is call/return, as described in Section 12.3.2.
+
+             In a concurrent or distributed design, the components are active (concurrent)
+         and capable of being deployed to different nodes in a distributed environment. In
+         this design, concurrent components can communicate with each other using several
+         different communication patterns (see Section 12.3), such as synchronous, asyn-
+         chronous, brokered, or group communication. An underlying middleware frame-
+         work is typically provided to allow components to communicate.
+
+        12.1.2 Architecture Stereotypes
+
+         In UML 2, a modeling element can be described with more than one stereotype.
+         During analysis modeling, one stereotype was used to represent the role character-
+         istic of a modeling element (class or object), During design modeling, a different
+         stereotype can be used to represent the architectural characteristic of a modeling
+         element. This capability is very useful, and the COMET method takes full advantage
+         of it. In particular, one stereotype is used to describe the role played by the mod-
+         eling element, such as whether it is a boundary or entity class. A second stereotype
+         can be used in design modeling to represent the architectural structuring element
+         such as subsystem (Chapter 12), component (Chapter 17), service (Chapter 16), or
+         concurrent task (Chapter 18). It is important to realize that for a given class, the
+         role stereotype and the architectural structuring stereotype are orthogonal ­ that is,
+         independent of each other.
+
+        12.2 MULTIPLE VIEWS OF A SOFTWARE ARCHITECTURE
+
+         The design of the software architecture can be depicted from different perspectives,
+         referred to as different views. The structural view of the software architecture is
+                                                                          Overview of Software Architecture 195
+
+depicted on class diagrams, as described in Section 12.2.1. The dynamic view of
+the software architecture is depicted on communication diagrams, as described in
+Section 12.2.2. The deployment view of the software architecture is depicted on
+deployment diagrams, as described in Section 12.2.3. Another architectural view,
+the component-based software architecture view, is described in Chapter 17.
+
+12.2.1 Structural View of a Software Architecture
+
+The structural view of a software architecture is a static view, which does not change
+with time. At the highest level, subsystems are depicted on a class diagram. In par-
+ticular, a subsystem class diagram depicts the static structural relationship between
+the subsystems, which are represented as composite or aggregate classes, and mul-
+tiplicity of associations among them.
+
+    As an example of the structural view of a software architecture, consider the
+design of a client/server software architecture, in which there are multiple clients
+and a single service. An example of such an architecture is the Banking System, in
+which there are multiple instances of the ATM Client subsystem and a single instance
+of the Banking Service subsystem. In Figure 12.1, the client and service subsystems
+are depicted on a class diagram, which provides a static view of the architecture.
+Figure 12.1 depicts the static relationship between the Banking Service and the ATM
+Client for the Banking System, particularly the name and direction of the associa-
+tion ATM Client Requests Service From Banking Service, as well as the multiplicity
+of the association, namely, the one-to-many association between the service and
+the clients. Furthermore, both the client and service subsystems (depicted as aggre-
+gate classes in Figure 12.1) are depicted with two stereotypes, the first is the role
+
+«external output                                                    1 «external user»
+                                                                                Operator
+
+device»           1
+
+ReceiptPrinter
+
+                                      «software system»
+                                      BankingSystem
+
+                                      1  1                    Requests Service
+                                                                     From
+
+«external I/O     1                   1  «client»             1..*     1           «service»
+                                                                                 «subsystem»
+device»                                  «subsystem»                            BankingService
+
+CardReader                                         ATMClient
+                                      1
+
+                                         1
+
+                                   1
+
+«external output device»
+     CashDispenser
+
+                                                                                «external user»
+
+                                                                    1           ATMCustomer
+
+Figure 12.1. Structural view of client/server software architecture: high-level
+class diagram for Banking System
+196 Architectural Design
+
+         stereotype, client or service, and the second is the architectural structuring stereo-
+         type, which, in this example, is subsystem for both.
+
+        12.2.2 Dynamic View of a Software Architecture
+
+         The dynamic view of a software architecture is a behavioral view, which is depicted
+         on a communication diagram. A subsystem communication diagram shows the sub-
+         systems (depicted as aggregate or composite objects) and the message communica-
+         tion between them. As the subsystems can be deployed to different nodes, they are
+         depicted as concurrent components, because they execute in parallel and communi-
+         cate with each other over a network.
+
+             An example of the dynamic view of the architecture is given for the Banking Sys-
+         tem client/server software architecture, which is depicted on a subsystem commu-
+         nication diagram in Figure 12.2. Figure 12.2 depicts two subsystems of the Banking
+         System: ATM Client, of which there are many instances, and Banking Service, of which
+         there is one instance. Each ATM Client sends transactions to and receives responses
+         from the Banking Service. The ATM Client and Banking Service are depicted as con-
+         current components, because each executes in parallel with the other, although at
+         times they need to communicate with each other. Thus, while one client is prepar-
+         ing to make a request to the service, the Banking Service can be servicing a different
+         client. While the service is processing the request of a given client, the client typically
+         waits for the response. This form of communication, synchronous message commu-
+         nication with reply, is described in more detail in Section 12.3.4. On UML commu-
+         nication diagrams such as Figure 12.2, the synchronous message (ATMTransaction)
+         is depicted with a black arrowhead and the reply (bankResponse) is depicted as a
+         dashed arrow with a stick arrowhead. An alternative notation for synchronous com-
+         munication is described in Section 12.3.4 and depicted in Figure 12.11.
+
+                                        «external I/O
+                                           device»
+
+                                        : CardReader
+
+                                cardReaderInput  cardReaderOutput
+
+«external user»  customerInput  «software system»                 ATMTransaction      «service»
+: ATMCustomer                   : BankingSystem                   bankResponse      «subsystem»
+KeypadDisplay      display
+                   Information                        «client»                        : Banking
+                                                   «subsystem»                         Service
+                                                    : ATMClient
+
+                 operator                                         dispenser
+                 Input                                            Output
+
+«external user»            operator                      printer
+   : Operator              Information                   Output
+
+                                        «external output          «external output
+                                             device»                   device»
+
+                                        : ReceiptPrinter          : CardDispenser
+
+Figure 12.2. Dynamic view of client/server software architecture: high-level
+communication diagram for Banking System
+                                                                          Overview of Software Architecture 197
+
+    A subsystem communication diagram is a generic communication diagram, be-
+cause it depicts all possible interactions between objects (see Section 9.1.5). Because
+it depicts all possible scenarios, message sequence numbers are not used. Further-
+more, because generic communication diagrams depict generic instances (which
+means that they depict potential instances rather than actual instances), they use
+the UML 2 convention of not underlining the object names.
+
+    In addition to being generic, a subsystem communication diagram is also concur-
+rent because it depicts objects executing concurrently (see Section 2.8 for descrip-
+tion of UML notation). Thus, Figure 12.2 depicts two concurrent subsystems, the
+ATM Client and Banking Service, which are geographically distributed.
+
+12.2.3 Deployment View of a Software Architecture
+The deployment view of the software architecture depicts the physical configura-
+tion of the software architecture, in particular how the subsystems of the architec-
+ture are allocated to physical nodes in a distributed configuration. A deployment
+diagram can depict a specific deployment with a fixed number of nodes. Alterna-
+tively, it can depict the overall structure of the deployment ­ for example, identifying
+that a subsystem can have many instances, each deployable to a separate node, but
+not depicting the specific number of instances. An example of this view is given in
+Figure 12.3 for the Banking System client/server software architecture. In this
+deployment, each ATM Client instance is allocated to its own physical node,
+whereas the centralized Banking Service is allocated to a single node. In addition,
+the nodes are connected by means of a wide area network.
+
+                                                                           Banking
+                                                                           Service
+                                                                       {server node}
+
+                                                            «wide area network»
+
+     ATM            ATM            ATM
+    Client1        Client2        Client3
+{client node}  {client node}  {client node}
+
+Figure 12.3. Deployment view of client/server software architecture:
+deployment diagram
+198 Architectural Design
+
+        12.3 SOFTWARE ARCHITECTURAL PATTERNS
+
+         Chapter 4 introduced the concept of software patterns and the different kinds of pat-
+         terns, including software architectural patterns and software design patterns. Soft-
+         ware architectural patterns provide the skeleton or template for the overall software
+         architecture or high-level design of an application. Shaw and Garlan (1996) referred
+         to architectural styles or patterns of software architecture, which are recurring archi-
+         tectures used in a variety of software applications (see also Bass, Clements, and
+         Kazman 2003). These include such widely used architectures as client/server and
+         layered architectures.
+
+             Software architectural patterns can be grouped into two main categories: archi-
+         tectural structure patterns, which address the static structure of the architecture,
+         and architectural communication patterns, which address the dynamic communica-
+         tion among distributed components of the architecture. This chapter introduces the
+         concept of software architectural patterns and describes one architectural structure
+         pattern, the Layers of Abstraction pattern (Section 12.3.1). It also describes three
+         architectural communication patterns ­ the Call/Return pattern (Section 12.3.2),
+         the Asynchronous Message Communication pattern (Section 12.3.3), and the Syn-
+         chronous Message Communication with Reply pattern (Section 12.3.4). Other pat-
+         terns are described in later chapters. Tables 12.1, 12.2, and 12.3 summarize where
+         the patterns are described.
+
+        12.3.1 Layers of Abstraction Architectural Pattern
+
+         The Layers of Abstraction pattern (also known as the Hierarchical Layers or Levels
+         of Abstraction pattern) is a common architectural pattern that is applied in many
+         different software domains (Buschmann et al. 1996). Operating systems, database
+         management systems, and network communication software are examples of soft-
+         ware systems that are often structured as hierarchies.
+
+             As Parnas (1979) pointed out in his seminal paper on designing software for
+         ease of extension and contraction (see also Hoffman and Weiss 2001), if software is
+         designed in the form of layers, it can be extended by the addition of upper layers that
+         use services provided by lower layers and contracted by the removal of upper layers.
+
+             With a strict hierarchy, each layer uses services in the layer immediately below it
+         (e.g., layer 3 can only invoke services provided by layer 2). With a flexible hierarchy,
+         a layer does not have to invoke a service at the layer immediately below it, but it
+
+Table 12.1. Software architectural structure patterns
+
+Software architectural structure patterns  Chapter
+
+Centralized Control Pattern                Chapter 18, Section 18.3.1
+Distributed Control Pattern                Chapter 18, Section 18.3.2
+Hierarchical Control Pattern               Chapter 18, Section 18.3.3
+Layers of Abstraction Pattern              Chapter 12, Section 12. 3.1
+Multiple Client/Multiple Service Pattern   Chapter 15, Section 15.2.2
+Multiple Client/Single Service Pattern     Chapter 15, Section 15.2.1
+Multi-tier Client/Service Pattern          Chapter 15, Section 15.2.3
+                                                  Overview of Software Architecture 199
+
+Table 12.2. Software architectural communication patterns
+
+Software architectural communication patterns     Chapter
+
+Asynchronous Message Communication Pattern        Chapter 12, Section 12.3.3
+Asynchronous Message Communication with Callback  Chapter 15, Section 15.3.2
+
+   Pattern                                        Chapter 12, Section 12.3.3
+Bidirectional Asynchronous Message Communication  Chapter 17, Section 17.6.1
+Broadcast Pattern                                 Chapter 16, Section 16.2.2
+Broker Forwarding Pattern                         Chapter 16, Section 16.2.3
+Broker Handle Pattern                             Chapter 12, Section 12.3.2
+Call/Return                                       Chapter 16, Section 16.5
+Negotiation Pattern                               Chapter 16, Section 16.2.4
+Service Discovery Pattern                         Chapter 16, Section 16.2.1
+Service Registration                              Chapter 17, Section 17.6.2
+Subscription/Notification Pattern                 Chapter 12, Section 12.3.4;
+Synchronous Message Communication with Reply
+                                                     Chapter 15, Section 15.3.1
+   Pattern                                        Chapter 18, Section 18.8.3
+Synchronous Message Communication without Reply
+
+   Pattern
+
+can invoke services at more than one layer below (e.g., layer 3 could directly invoke
+services provided by layer 1).
+
+    The Layers of Abstraction architectural pattern is used in the TCP/IP, which is
+the most widely used protocol on the Internet (Comer 2008). Each layer deals with
+a specific characteristic of network communication and provides an interface, as a
+set of operations, to the layer above it. For each layer on the sender node, there is
+an equivalent layer on the receiver node. TCP/IP is organized into five conceptual
+layers, as shown in Figure 12.4 and enumerated here:
+
+    Layer 1: Physical layer. Corresponds to the basic network hardware, including
+       electrical and mechanical interfaces, and the physical transmission medium.
+
+    Layer 2: Network interface layer. Specifies how data are organized into frames
+       and how frames are transmitted over the network.
+
+    Layer 3: Internet layer, also referred to as the Internet Protocol (IP) layer. Spec-
+       ifies the format of packets sent over the Internet and the mechanisms for for-
+       warding packets through one or more routers from a source to a destination
+       (Figure 12.5). The router node in Figure 12.5 is a gateway that interconnects a
+       local area network to a wide area network.
+
+    Layer 4: Transport layer (TCP). Assembles packets into messages in the order
+       they were originally sent. The Transmission Control Protocol, or TCP, uses
+       the IP network protocol to carry messages. It provides a virtual connection
+
+Table 12.3. Software architectural transaction patterns
+
+Software architectural transaction patterns       Chapter
+
+Compound Transaction Pattern                      Chapter 16, Section 16.4.2
+Long-Living Transaction Pattern                   Chapter 16, Section 16.4.3
+Two-Phase Commit Protocol Pattern                 Chapter 16, Section 16.4.1
+200 Architectural Design
+
+                                            Layer 5  Application Layer
+                                            Layer 4
+                                            Layer 3   Transport Layer
+                                            Layer 2          (TCP)
+                                            Layer 1
+                                                        Internet Layer
+                                                               (IP)
+
+                                                     Network Interface
+                                                             Layer
+
+                                                       Physical Layer
+
+                       Figure 12.4. Layers of Abstraction architectural pattern:
+                        example of the Internet (TCP/IP) reference model
+
+       from an application on one node to an application on a remote node, hence
+       providing what is termed an end-to-end protocol (see Figure 12.5).
+    Layer 5: Application layer. Supports various network applications, such as file
+       transfer (FTP), electronic mail, and the World Wide Web.
+
+    An interesting characteristic of the layered architecture is that it is straightfor-
+ward to replace the upper layers of the architecture with different layers that use
+
+         Node 1                                                                           Node 2
+
+Layer 5  Application      Layer 3                    Internet Layer     Layer 5           Application
+Layer 4     Layer         Layer 2                           (IP)        Layer 4              Layer
+Layer 3                                                                 Layer 3
+Layer 2   Transport                                      Network        Layer 2            Transport
+Layer 1      Layer                                      Interface       Layer 1               Layer
+            (TCP)                                                                             (TCP)
+                                                          Layer
+           Internet                                                                         Internet
+         Layer (IP)       Layer 1                    Physical Layer                       Layer (IP)
+
+          Network                                                                          Network
+          Interface                                                                        Interface
+
+            Layer                                                                            Layer
+
+          Physical                                                                         Physical
+            Layer                                                                            Layer
+
+                                            Router
+                                            Node
+
+                      «local area network»                           «wide area network»
+
+Figure 12.5. Layers of Abstraction architectural pattern: Internet communication with TCP/IP
+

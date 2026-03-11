@@ -1,0 +1,4 @@
+interface:
+  display_name: "Draw.io Communication Diagram"
+  short_description: "Build UML communication diagrams in draw.io"
+  default_prompt: "Use $drawio-communication-diagram to turn this interaction blueprint into an editable .drawio communication diagram."

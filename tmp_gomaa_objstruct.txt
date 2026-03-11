@@ -1,0 +1,909 @@
+                                                                                  Object and Class Structuring 117
+
+classes. Because an object is an instance of a class, an object has the same stereotype
+as the class from which it is instantiated. Thus, the categorization described in this
+section applies equally to classes and objects.
+
+    In Figure 8.1, each box represents a different category of application class, and
+the relationships between them are inheritance relationships. Therefore, an appli-
+cation class is classified as an entity class, a boundary class, a control class, or an
+application logic class. These stereotypes are classified further, as shown in Figure
+8.1 and described here.
+
+    This classification process is analogous to classifying books in a library, with
+major classes such as fiction and nonfiction, and further classification of fiction into
+classics, mysteries, adventure, and so on, and nonfiction into biography, autobiogra-
+phy, travel, cooking, history, and other categories. It is also analogous to the taxon-
+omy of the animal kingdom, which is divided into major categories (mammal, bird,
+fish, reptile, and so on) that are further divided into subclasses (e.g., cat, dog, and
+monkey are subclasses of mammal).
+
+8.3 OBJECT AND CLASS STRUCTURING CATEGORIES
+
+Objects and classes are categorized according to the roles they play in the applica-
+tion. There are four main object and class structuring categories, as shown in Figure
+8.1: boundary objects, entity objects, control objects, and application logic objects.
+Most applications will have objects from each of the four categories. However, dif-
+ferent types of applications will have a greater number of classes in one or other
+category. Thus, information-intensive systems will have several entity classes, which
+is why static modeling is so vital for these systems. On the other hand, real-time sys-
+tems are likely to have several device I/O boundary classes to interface to the various
+sensors and actuators. They are also likely to have complex state-dependent control
+classes because these systems are highly state-dependent. These object structuring
+categories are summarized in the following list and described in detail in Sections
+8.4 through 8.7.
+
+    The four main object and class structuring categories (Figure 8.1) are as
+follows:
+
+    1. Entity object. A software object, in many cases persistent, which encapsulates
+        information and provides access to the information it stores. In some case, an
+        entity object could be accessed via a service object.
+
+    2. Boundary object. Software object that interfaces to and communicates with
+        the external environment. Boundary objects are further categorized as:
+        r User interaction object. Software object that interacts with and interfaces
+           to a human user.
+        r Proxy object. Software object that interfaces to and communicates with an
+           external system or subsystem.
+        r Device I/O boundary object. Software object that receives input from
+           and/or outputs to a hardware I/O device.
+
+    3. Control object. Software object that provides the overall coordination for
+        a collection of objects. Control objects may be coordinator objects, state-
+        dependent control objects, or timer objects.
+118 Software Modeling
+
+             4. Application logic object. Software object that contains the details of the
+                 application logic. Needed when it is desirable to hide the application logic
+                 separately from the data being manipulated because it is considered likely
+                 that the application logic could change independently of the data. For infor-
+                 mation systems, application logic objects are usually business logic objects,
+                 whereas for real-time, scientific, or engineering applications, they are usually
+                 algorithm objects. Another category is service objects, which provide services
+                 for client objects, typically in service-oriented architectures and applications.
+
+             In most cases, what category an object fits into is usually obvious. However, in
+         some cases, it is possible for an object to satisfy more than one of the aforemen-
+         tioned criteria. For example, an object could have characteristics of both an entity
+         object, in that it encapsulates some data, and an algorithm object, in that it executes
+         a significant algorithm. In such cases, allocate the object to the category it seems to
+         fit best. Note that it is more important to determine all the objects in the system than
+         to be unduly concerned about how to categorize a few borderline cases.
+
+             For each object structuring criterion, there is an object behavioral pattern, which
+         describes how the object interacts with its neighboring objects. It is useful to under-
+         stand the object's typical pattern of behavior, because when this category of object
+         is used in an application, it is likely to interact with the same kinds of neighboring
+         objects in a similar way. Each behavioral pattern is depicted on a UML communi-
+         cation diagram.
+
+        8.4 EXTERNAL CLASSES AND SOFTWARE BOUNDARY CLASSES
+
+         As described in Section 7.8, external classes are classes that are outside the software
+         system and that interface to the system. Boundary classes are classes inside the sys-
+         tem that interface to and communicate with the external classes. To help determine
+         the boundary classes in the system, it is necessary to consider the external classes to
+         which they are connected.
+
+             Identifying the external classes that communicate with and interface to the
+         system helps identify some of the classes in the system itself, namely, the boundary
+         classes. Each of the external classes communicates with a boundary class in the
+         system. There is usually a one-to-one association between the external class (assum-
+         ing it has been identified correctly) and the internal boundary class with which it
+         communicates. External classes interface to software boundary classes as follows:
+
+           An external user class interfaces to and interacts with a user interaction class.
+           An external system class interfaces to and communicates with a proxy class.
+           An external device class provides input to and/or receives output from a device
+
+             I/O boundary class. Continuing with this classification:
+              r An external input device class provides input to an input class.
+              r An external output device class receives output from an output class.
+              r An external I/O device class provides input to and receives output from an I/O
+
+                class.
+           An external timer class signals to a software timer class.
+                                                                                  Object and Class Structuring 119
+
+    An external device class represents an I/O device type. An external I/O device
+object represents a specific I/O device, that is, an instance of the device type. In
+the next section, we consider the internal objects that interface to and communicate
+with the external objects.
+
+8.5 BOUNDARY CLASSES AND OBJECTS
+
+This section describes the characteristics of the three different kinds of boundary
+objects: user interaction objects, proxy objects, and device I/O boundary objects. In
+each case, an example is given of a boundary class, followed by an example of a
+behavioral pattern in which an instance of the boundary class, that is, a boundary
+object, communicates with neighboring objects in a typical interaction sequence.
+
+8.5.1 User Interaction Objects
+
+A user interaction object communicates directly with the human user, receiving
+input from the user and providing output to the user via standard I/O devices such as
+the keyboard, visual display, and mouse. Depending on the user interface technol-
+ogy, the user interface could be very simple (such as a command line interface) or
+it could be more complex (such as a graphical user interface [GUI] object). A user
+interaction object may be a composite object composed of several simpler user inter-
+action objects. This means that the user interacts with the system via several user
+interaction objects. Such objects are depicted with the «user interaction» stereotype.
+
+    An example of a simple user interaction class called Operator Interaction is
+depicted in Figure 8.2a. An instance of this class is the Operator Interaction object
+(see Figure 8.2b), which is depicted in a typical behavioral pattern for user inter-
+action objects. The object accepts operator commands from the operator actor;
+requests sensor data from an entity object, Sensor Data Repository; and displays
+the data it receives to the operator. More complex user interaction objects are
+also possible. For example, the Operator Interaction object could be a composite
+user interaction object composed of several simpler user interaction objects. This
+would allow the operator to receive dynamic updates of workstation status in one
+window, receive dynamic updates of alarm status in another window, and conduct
+an interactive dialog with the system in a third window. Each window is composed
+of several GUI widgets, such as menus, buttons, and simpler windows.
+
+                   a)
+
+                                                                          «user interaction»
+                                                                               Operator
+                                                                              Interaction
+
+b)          1: Operator  «user interaction»    2: Sensor       «entity»
+: Operator  Command          : Operator        Request       : SensorData
+                             Interaction                      Repository
+            4: Display                       3: Sensor Data
+            Data
+
+Figure 8.2. Example of user interaction class and object
+120 Software Modeling
+
+a)                     «proxy»
+
+                       Pick&Place
+
+                       Robot
+
+                       Proxy
+
+b)                                      1: Pick & Place   «external
+                                        Robot Command      system»
+      «proxy»                                             : External
+   : Pick&Place        2: Pick & Place                   Pick&Place
+                       Robot Response                       Robot
+        Robot
+        Proxy                                              Real-world
+                                                         external system
+  Software object
+
+                                                                       System boundary
+
+                               (Note: the dashed line for the system boundary is for illustrative purpose only and
+                               does not conform to the UML notation.)
+
+                       Figure 8.3. Example of proxy class and object
+
+8.5.2 Proxy Objects
+
+A proxy object interfaces to and communicates with an external system. The proxy
+object is the local representative of the external system and hides the details of
+"how" to communicate with the external system.
+
+    An example of a proxy class is a Pick & Place Robot Proxy class. An example of
+a behavioral pattern for a proxy object is given in Figure 8.3, which depicts a Pick
+& Place Robot Proxy object that interfaces to and communicates with the External
+Pick & Place Robot. The Pick & Place Robot Proxy object sends pick and place robot
+commands to the External Pick & Place Robot. The real-world robot responds to the
+commands.
+
+    Each proxy object hides the details of how to interface to and communicate with
+the particular external system. A proxy object is more likely to communicate by
+means of messages to an external, computer-controlled system, such as the robot
+in the preceding example, rather than through sensors and actuator, as is the case
+with device I/O boundary objects. However, these issues are not addressed until the
+design phase.
+
+8.5.3 Device I/O Boundary Objects
+
+A device I/O boundary object provides the software interface to a hardware I/O
+device. Device I/O boundary objects are needed for nonstandard application-
+specific I/O devices, which are more prevalent in real-time systems, although they
+are often needed in other systems as well. Standard I/O devices are typically han-
+dled by the operating system, so special-purpose device I/O boundary objects do not
+need to be developed as part of the application.
+
+    A physical object in the application domain is a real-world object that has some
+physical characteristics ­ for example, it can be seen and touched. For every real-
+world physical object that is relevant to the problem, there should be a corre-
+sponding software object in the system. In the Automated Guided Vehicle System,
+for example, the vehicle motor and arm are relevant real-world physical objects,
+                                                           Object and Class Structuring 121
+
+a)
+
+                                           «input»
+                                        Temperature
+
+                                            Sensor
+                                           Interface
+
+b)                   1: Temperature     «input»
+                     Sensor Input    aTemperature
+    «external input
+        device»                          Sensor
+                                        Interface
+     aReal-World
+     Temperature
+
+         Sensor
+
+  Real-world                         Software object
+hardware object
+
+                     Hardware / software boundary
+
+(Note: the dashed line for the hardware/software boundary is for illustrative purpose
+only and does not conform to the UML notation.)
+
+Figure 8.4. Example of input class and object
+
+because they interact with the software system. On the other hand, the vehicle chas-
+sis and wheels are not relevant real-world objects, because they do not interact with
+the software system. In the software system, the relevant real-world physical objects
+are modeled by means of software objects, such as the vehicle motor and arm soft-
+ware objects.
+
+    Real-world physical objects usually interface to the system via sensors and actu-
+ators. These real-world objects provide inputs to the system via sensors or receive
+outputs from the system via actuators. Thus, to the software system, the real-world
+objects are actually I/O devices that provide inputs to and receive outputs from
+the system. Because the real-world objects correspond to I/O devices, the software
+objects that interface to them are referred to as device I/O boundary objects.
+
+    For example, in the Automated Guided Vehicle System, the station arrival indi-
+cator is a real-world object that has a sensor (input devices) that provides inputs to
+the system. The motor and arm are real-world objects that are controlled by means
+of actuators (output devices) that receive outputs from the system.
+
+    An input object is a device I/O boundary object that receives input from an
+external input device. Figure 8.4 shows an example of an input class Temperature
+Sensor Interface and an instance of this class, an input object, on a communication
+diagram. An input object, a Temperature Sensor Interface object, receives tempera-
+ture sensor input from an external real-world hardware object, a Real-World Temper-
+ature Sensor input device. Figure 8.4 also shows the hardware/software boundary, as
+well as the stereotypes for the hardware «external input device» and the software
+«input» objects. Thus, the input object provides the software system interface to the
+external hardware input device.
+
+    An output object is a device I/O boundary object that sends output to an external
+output device. Figure 8.5 shows an example of an output class called Red Light Inter-
+face, as well as an instance of this class, the Red Light Interface object, which sends
+outputs to an external real-world object, the Red Light Actuator external output
+device. The Red Light Interface software object sends On and Off Light commands
+to the hardware Red Light Actuator. Figure 8.5 also shows the hardware/software
+boundary.
+122 Software Modeling
+                                  a)
+
+                                                       «output»
+                                                       RedLight
+                                                       Interface
+
+b)                                                     1: Light Command  «external output
+                                                                              device»
+        «output»
+       : RedLight                                                           : RedLight
+        Interface                                                            Actuator
+
+                                      Software object                                           Real-world
+
+                                                                                             hardware object
+                                                       Hardware / software boundary
+
+(Note: the dashed line for the hardware/software boundary is for illustrative purpose
+only and does not conform to the UML notation.)
+
+Figure 8.5. Example of output class and object
+
+    A hardware I/O device can also be a device that both sends inputs to the sys-
+tem and receives outputs from the system. The corresponding software class is an
+I/O class, and a software object that is instantiated from this class is an I/O object.
+An input/output (I/O) object is a device I/O boundary object that receives input
+from and sends output to an external I/O device. This is the case with the ATM Card
+Reader Interface class shown in Figure 8.6a and its instance, the ATM Card Reader
+Interface object (see Figure 8.6b), which receives ATM card input from the external
+I/O device, the ATM Card Reader. In addition, ATM Card Reader Interface sends eject
+and confiscate output commands to the card reader.
+
+    In some applications, there are many real-world objects of the same type. These
+are modeled by means of one device I/O object for each real-world object, in which
+all the objects are instances of the same class. For example, the Factory Automation
+System, which controls many automated guided vehicles, has many vehicle motors
+of the same type and many robotic arms of the same type. There is one instance
+of the Motor Interface class and one instance of the Arm Interface class for each
+automated guided vehicle.
+
+a)
+
+                                       «input/output»
+                                     ATMCardReader
+
+                                          Interface
+
+b)                                                     1: Card Reader      «input/output»
+                                                       Input             : ATMCardReader
+   «external input/
+    output device»                                     2: Card Reader          Interface
+                                                       Output
+      : ATMCard                                                            Software object
+         Reader
+
+       Real-world
+    hardware object
+
+                                                       Hardware / software boundary
+
+(Note: the dashed line for the hardware/software boundary is for illustrative purpose
+only and does not conform to the UML notation.)
+
+Figure 8.6. Example of I/O class and object
+                                                                                   Object and Class Structuring 123
+
+                                                               «software system»
+                                                               BankingSystem
+
+                    «external I/O               Inputs to      «input/output»
+                                                                CardReader
+                 1  device»                  1              1     Interface
+
+                    CardReader                  Outputs to
+
+          1         1 «external output          Outputs to          «output»                                               1 ATM
+             1                  device»                          ReceiptPrinter                                                  Operator
+              1                              1              1                                             Interacts
+                            ReceiptPrinter                          Interface                               with           1
+  ATM 1                                                                            «user interaction»  1            1
+Customer             1                                         «user interaction»       Operator                       «external user»
+                            «external user»     Interacts          Customer                                               Operator
+                            ATMCustomer           with             Interaction     Interaction
+                            KeypadDisplay
+                                             1              1
+
+                    «external output            Outputs to        «output»
+                        device»                                CashDispenser
+                 1                           1              1
+
+                    CashDispenser                              Interface
+
+Figure 8.7. Banking System external classes and boundary classes
+
+8.5.4 Depicting External Classes and Boundary Classes
+
+Chapter 7 discussed how to determine the scope of the system and how to develop
+a software system context class diagram, which shows all the external classes that
+interface to and communicate with the system. It is useful to expand this diagram to
+show the boundary classes that communicate with the external classes. The bound-
+ary classes are software classes inside the system that are at the boundary between
+the system and the external environment. The system is shown as an aggregate class,
+and the boundary classes, which are part of the system, are shown inside the aggre-
+gate class. Each external class, which is external to the system, has a one-to-one asso-
+ciation with a boundary class. Thus, starting with the external classes, as depicted on
+the software system context class diagram, helps determine the boundary classes.
+
+    Starting with the software system context class diagram for the Banking System,
+we determine that each external class communicates with a boundary class (Fig-
+ure 8.7). The software system is depicted as an aggregate class, which contains the
+boundary classes that interface to the external classes. In this application, there are
+three device I/O boundary classes and two user interaction classes. The device I/O
+boundary classes are the Card Reader Interface, through which ATM cards are read,
+the Cash Dispenser Interface, which dispenses cash, and the Receipt Printer Interface,
+which prints receipts. The Customer Interaction class is a user interaction class, which
+displays textual messages and prompts to the customer and receives the customer's
+inputs. The Operator Interaction class provides the user interface to the ATM opera-
+tor, who replenishes the ATM machine with cash. There is one instance of each of
+these boundary classes for each ATM.
+
+8.6 ENTITY CLASSES AND OBJECTS
+
+An entity object is a software object that stores information. Entity objects are
+instances of entity classes, whose attributes and relationships with other entity
+classes are determined during static modeling, as described in Chapter 7. Entity
+objects store data and provide limited access to that data via the operations they
+provide. In some cases, an entity object might need to access other entity objects in
+order to update the information it encapsulates.
+124 Software Modeling
+
+                                  «entity»      «entity»
+                                  Account      anAccount
+
+                       accountNumber: Integer
+                       balance: Real
+
+                       Figure 8.8. Example of entity class and object
+
+    In many information system applications, the information encapsulated by entity
+objects is stored in a file or database. In these cases, the entity object is persistent,
+meaning that the information it contains is preserved when the system is shut down
+and then later powered up. In some applications, such as real-time systems, entity
+objects are often stored in main memory. These issues are addressed during the
+design phase, as described in Chapter 14.
+
+    An example of an entity class from the banking application is the Account class
+(Figure 8.8). The stereotype «entity» is shown to clearly identify what kind of class
+it is. Instances of the Account class are entity objects (as shown in Figure 8.8), which
+are also identified by the stereotype «entity». The attributes of Account are account
+Number and balance. The object an Account is a persistent (long-living) object that
+is accessed by several objects that realize various use cases. These use cases include
+customer use cases for account withdrawals, inquiries, and transfers at various ATM
+machines, as well as human teller use cases to open and close the account and to
+credit and debit the account. The account is also accessed by objects that realize a
+use case that prepares and prints monthly statements for customers.
+
+    An example of an entity class from a sensor monitoring example is the Sen-
+sor Data class (Figure 8.9). This class stores information about analog sensors. The
+attributes are sensor Name, sensor Value, upper Limit, lower Limit, and alarm Status.
+An example of an instance of this class is the temperature Sensor Data object.
+
+8.7 CONTROL CLASSES AND OBJECTS
+
+A control object provides the overall coordination of the objects that realize a use
+case. Simple use cases do not need control objects. However, in a more complex
+use case, a control object is usually needed. A control object is analogous to the
+conductor of an orchestra, who orchestrates (controls) the behavior of the other
+objects that participate in the use case, notifying each object when and what it should
+perform. Depending on the characteristics of the use case, the control object may
+be state-dependent. There are several kinds of control objects, which are described
+in the sections that follow.
+
+                                  «entity»       «entity»
+                                SensorData     temperature
+                                               SensorData
+                       sensorName: String
+                       sensorValue: Real
+                       upperLimit: Real
+                       lowerLimit: Real
+                       alarmStatus: Boolean
+
+                       Figure 8.9. Example of entity class and object
+                                                                                     Object and Class Structuring 125
+
+a)
+                                                           «coordinator»
+
+                                                         BankCoordinator
+
+b)
+
+                                                                        «subsystem»
+                                                                        : ATMClient
+
+                                 1, 2, 3, 4:       1.3, 2.3, 3.3, 4.3:
+                                 ATM               Bank
+                                 Transaction       Response
+
+                                                «coordinator»
+                                              : BankCoordinator
+
+4.1: Transfer                                                                                          1.1: PIN Validation
+Transaction                                                                                            Request
+
+                                 3.1: Query        3.2: Query                        2.1:
+                                 Transaction       Response                          Withdraw
+                                                                                     Request
+                                                     2.2: Withdraw                                     1.2: PIN
+                  4.2: Transfer                      Response                                          Validation
+                  Response                                                                             Response
+
+«business logic»                 «business logic»                                    «business logic»              «business logic»
+    : Transfer                        : Query                                          : Withdrawal                : PINValidation
+  Transaction                                                                          Transaction
+    Manager                        Transaction                                           Manager                     Transaction
+                                     Manager                                                                           Manager
+
+Figure 8.10. Example of coordinator class and object
+
+8.7.1 Coordinator Objects
+
+A coordinator object is an overall decision-making object that determines the over-
+all sequencing for a collection of related objects. A coordinator object is often
+required to provide the overall sequencing for execution of a use case. It makes
+the overall decisions and decides when, and in what order, other objects partici-
+pate in the use case. A coordinator object makes its decision based on the input
+it receives and is not state-dependent. Thus, an action initiated by a coordinator
+object depends only on the information contained in the incoming message and not
+on what previously happened in the system.
+
+    An example of a coordinator class is the Bank Coordinator, which is depicted in
+Figure 8.10a. The instance of this class, the Bank Coordinator object receives ATM
+transactions from a client ATM. Depending on the transaction type, the Bank Coor-
+dinator directs the transaction to the appropriate transaction-processing object to
+execute the transaction. In the Banking System, these are a Withdrawal Transaction
+Manager object, a Transfer Transaction Manager object, a Query Transaction Manager
+object, or a PIN Validation Transaction Manager object (see Figure 8.10b).
+
+    Another kind of coordinator is a coordinator object in a service-oriented appli-
+cation, which coordinates the interaction between a user interaction object and one
+or more service objects. An example of this is described in Section 8.8.3.
+
+8.7.2 State-Dependent Control Objects
+
+A state-dependent control object is a control object whose behavior varies in each
+of its states. A finite state machine is used to define a state-dependent control object
+and is depicted by using a statechart. Statecharts, which were originally conceived by
+Harel (1988, 1998), can be either flat (nonhierarchical) or hierarchical, as described
+126 Software Modeling
+                                    a)
+
+                                                          «state dependent
+                                                               control»
+
+                                                            ATMControl
+
+b)                                                                                «output»
+
+                                                          1: Dispense Cash        : CashDispenser
+
+                                                                                  Interface
+
+                                        «state dependent       2: Cash Dispensed
+                                             control»         3: Print Receipt
+
+                                         : ATMControl     4: Receipt Printed
+
+                                                                                      «output»
+                                                                                  : ReceiptPrinter
+
+                                                                                      Interface
+
+Figure 8.11. Example of state-dependent control class and object
+
+in Chapter 10. This section gives only a brief overview of state-dependent control
+objects, which are described in much more detail in Chapters 10 and 11.
+
+    A state-dependent control object receives incoming events that cause state tran-
+sitions and generates output events that control other objects. The output event gen-
+erated by a state-dependent control object depends not only on the input received
+by the object but also on the current state of the object. An example of a state-
+dependent control object is the ATM Control object (Figure 8.11), which is defined by
+means of the ATM Control statechart. In the example, ATM Control is shown control-
+ling two other output boundary objects, Receipt Printer Interface and Cash Dispenser
+Interface.
+
+    In a control system, there are usually one or more state-dependent control
+objects. It is also possible to have multiple state-dependent control objects of the
+same type. Each object executes an instance of the same finite state machine
+(depicted as a statechart), although each object is likely to be in a different state. An
+example of this is the Banking System, which has several ATMs, where each ATM
+has an instance of the state-dependent control class, ATM Control, which is also shown
+in Figure 8.11. Each ATM Control object executes its own instance of the ATM Control
+statechart and keeps track of the state of the local ATM. Another example is from
+the Automated Guided Vehicle System, in which the control and sequencing of the
+vehicle is modeled by means of a state-dependent control object, Vehicle Control,
+and defined by means of a statechart. Consequently, each vehicle has a vehicle
+control object. More information about state-dependent control objects is given in
+Chapter 11.
+
+8.7.3 Timer Objects
+
+A timer object is a control object that is activated by an external timer ­ for example,
+a real-time clock or operating system clock. The timer object either performs some
+action itself or activates another object to perform the desired action.
+                                    Object and Class Structuring 127
+
+a)                     «timer»
+                    ReportTimer
+b)
+                    1: Timer Event
+  «external timer»
+   : DigitalClock                      «timer»
+                                    : ReportTimer
+
+                                                                                                                   2: Prepare
+
+                                                                                                         «entity»
+                                                                                                    : WeeklyReport
+
+                         Figure 8.12. Example of a timer class and object
+
+    An example of a timer class, Report Timer, is given in Figure 8.12. An instance
+of this class, the timer object Report Timer, is activated by a timer event from an
+external timer, the Digital Clock. The timer object then sends a Prepare message to
+the Weekly Report object.
+
+8.8 APPLICATION LOGIC CLASSES AND OBJECTS
+
+This section describes the three kinds of application logic objects, namely, business
+logic objects, algorithm objects, and service objects. As with control objects, appli-
+cation logic objects are more likely to be considered when the dynamic model, not
+the initial conceptual static model, is being developed.
+
+8.8.1 Business Logic Objects
+
+A business logic object defines the business-specific application logic for processing
+a client request. The goal is to encapsulate (hide) business rules that could change
+independently of each other into separate business logic objects. Another goal is to
+separate the business rules from the entity data that they operate on, because the
+business rules can change independently of the entity data. Usually a business logic
+object accesses various entity objects during its execution.
+
+    Business logic objects are only needed in certain situations. Sometimes, there is
+a choice between encapsulating the business logic in a separate business logic object
+or, if the business logic is sufficiently simple, having it as an operation of an entity
+object. The guideline is that if the business rule can be executed only by accessing
+two or more entity objects, there should be a separate business logic object. On the
+other hand, if accessing one entity object is sufficient to execute the business rule, it
+could be provided by an operation of that object.
+
+    An example of a business logic class is the Withdrawal Transaction Manager class,
+which is shown in Figure 8.13. An instance of this class, the Withdrawal Transaction
+Manager business logic object, services withdrawal requests from ATM customers.
+128 Software Modeling
+
+a)
+                                                   «business logic»
+                                                      Withdrawal
+
+                                                TransactionManager
+
+b)
+
+                                                             «coordinator»
+                                                          : BankCoordinator
+
+                       1: Withdrawal Request                         8: Withdrawal Response
+                       (Card Id, Account#, Amount)                   (Amount, Balance)
+
+                                     «business logic»
+                                       : Withdrawal
+
+                                   TransactionManager
+
+                                                                             7: Log Transaction
+
+4: Debit                           2: Check
+(Account#, Amount)                 Daily Limit
+                                   (Card Id, Amount),
+                                   6: Update           3: Daily Limit
+                                   Daily Total         Response
+                                   (Card Id, Amount)
+                       5: Balance
+
+«entity»                                              «entity»                                 «entity»
+: Account                                           : DebitCard                              : Transaction
+
+                                                                                                  Log
+
+Figure 8.13. Example of business logic class and object
+
+It encapsulates the business rules for processing an ATM withdrawal request. For
+example, the first business rule is that the customer must have a minimum balance
+of $50 after the withdrawal takes place; the second business rule is that the cus-
+tomer is not allowed to withdraw more than $250 per day with a debit card. The
+Withdrawal Transaction Manager object accesses an Account object to determine if
+the first business rule will be satisfied. It accesses the Debit Card object, which main-
+tains a running total of the amount withdrawn by an ATM customer on this day, to
+determine if the second business rule will be satisfied. If either business rule is not
+satisfied, the withdrawal request is rejected.
+
+    A business logic object usually has to interact with entity objects in order to
+execute its business rules. In this way, it resembles a coordinator object. However,
+unlike a coordinator object, whose main responsibility is to supervise other objects,
+the prime responsibility of a business logic object is to encapsulate and execute the
+business rules.
+
+8.8.2 Algorithm Objects
+
+An algorithm object encapsulates an algorithm used in the problem domain. This
+kind of object is more prevalent in real-time, scientific, and engineering domains.
+Algorithm objects are used when there is a substantial algorithm used in the prob-
+lem domain that can change independently of the other objects. Simple algorithms
+                                                                                                 Object and Class Structuring 129
+
+a)
+
+                                                                            «algorithm»
+                                                                               Cruiser
+
+b)
+
+                                                              «entity»
+                                                            : Cruising
+
+                                                               Speed
+
+                                  2: Read                               3: Cruising Speed Value
+
+«state dependent  1: Enable                                                                               4: Read        «entity»
+     control»     Maintain Speed                                                                 5: Current Speed Value  : Current
+
+: CruiseControl                   «algorithm»                                                                             Speed
+                                    : Cruiser
+
+                                                                                                                         7: Motor Value
+
+                                                                                     6: Speed       «output»
+                                                                                     Adjustment  : ElectricMotor
+
+Figure 8.14. Example of algorithm class and object                                                  Interface
+
+are usually operations of an entity object that operate on the data encapsulated in
+the entity. In many scientific and engineering domains, algorithms are refined iter-
+atively because they are improved independently of the data they manipulate (e.g.,
+for improved performance or accuracy).
+
+    An example from a Train Control System is the Cruiser algorithm class. An
+instance of this class, the Cruiser object, calculates what adjustments to the speed
+should be made by comparing the current speed of the train with the desired cruis-
+ing speed (Figure 8.14). The algorithm is complex because it must provide gradual
+accelerations or decelerations of the train when they are needed, so as to have min-
+imal effect on the passengers.
+
+    An algorithm object frequently encapsulates data it needs for computing its algo-
+rithm. These data may be initialization data, intermediate result data, or threshold
+data, such as maximum or minimum values.
+
+    An algorithm object frequently has to interact with other objects in order to
+execute its algorithm (e.g., Cruiser). In this way, it resembles a coordinator object.
+Unlike a coordinator object, however, whose main responsibility is to supervise
+other objects, the prime responsibility of an algorithm object is to encapsulate and
+execute the algorithm.
+
+8.8.3 Service Objects
+
+A service object is an object that provides a service for other objects. They are
+usually provided in service-oriented architectures and applications, as described in
+Chapter 16. Client objects can request a service from the service object, which the
+service object will respond to. A service object never initiates a request; however,
+in response to a service request it might seek the assistance of other service objects.
+Service objects play an important role in service-oriented architectures, although
+130 Software Modeling
+
+a)                     «service»
+
+                       CatalogService
+
+    b)                                                    2: Catalog Request
+
+                1: Customer Input                                                  «coordinator»
+                                                                              aCustomerCoordinator
+                                      «user interaction»
+                                   : CustomerInteraction  5: Catalog Info
+aCustomer 6: Catalog Output
+
+                                                          3: Catalog Request                    4: Catalog Info
+
+                                                                                  «service»
+                                                                              : CatalogService
+
+Figure 8.15. Example of service class and object
+
+they are used in other architectures as well, such as client/server architectures and
+component-based software architectures. A service object might encapsulate the
+data it needs to service client requests or access another entity object(s) that encap-
+sulate the data.
+
+    An example of a service class is the Catalog Service class given in Figure 8.15a. An
+example of executing an instance of this class, the Catalog Service object, is shown
+in Figure 8.15b. The Catalog Service object provides support for viewing various cat-
+alog items from the supplier's catalog and selecting items from the catalog. The
+Customer Coordinator assists the Customer Interaction object in finding a supplier cat-
+alog, provided by the Catalog Service object, and making selections from the catalog.
+In addition to service classes and objects, coordinator classes and objects are also
+frequently used in service-oriented architectures and applications, as described in
+Chapter 16.
+
+8.9 SUMMARY
+
+This chapter described how to determine the software objects and classes in the sys-
+tem. Object and class structuring criteria were provided, and the objects and classes
+were categorized by using stereotypes. The emphasis is on problem domain objects
+and classes, which are to be found in the real world, and not on solution domain
+objects, which are determined at design time. The object and structuring criteria
+are usually applied to each use case in turn during dynamic interaction modeling,
+as described in Chapters 9 and 11, to determine the objects that participate in each
+use case. The sequence of interaction among the objects is then determined. Sub-
+system structuring criteria are described in Chapter 13. The design of the operations
+provided by each class is described in Chapter 14.
+
+EXERCISES                                                    (b) An object that stores data
+                                                              (c) An object that communicates with
+Multiple-choice questions: For each ques-
+tion, choose one of the answers.                                   an external object
+                                                             (d) An object that controls other
+ 1. What is a boundary object?
+      (a) An external object                                       objects
+                                                          2. What is a control object?
+                                             Object and Class Structuring 131
+
+    (a) An object that depends on other           (b) An internal clock
+         objects                                  (c) An object that is awakened by an
+
+   (b) An object that communicates with                 external timer
+         an external object                       (d) An object that interacts with a
+
+    (c) An object that controls other                   clock
+         objects                              7. What do class structuring criteria help
+
+   (d) An object that is controlled by            with?
+         other objects                            (a) Structuring an application into
+
+3. What is a state-dependent control ob-                classes
+   ject?                                          (b) Defining the attributes of a class
+    (a) An object that depends on a state         (c) Defining the associations of a class
+         machine                                  (d) Defining the operations of a class
+   (b) An object that communicates with       8. What is the classification process for
+         a state machine                          application classes analogous to?
+    (c) An object that controls a state           (a) Categorizing books in a library
+         machine                                  (b) Deciding how many copies of a
+   (d) An object that executes a state
+         machine                                        book are needed
+                                                  (c) Finding the classrooms in a school
+4. What is a coordinator object?                  (d) Identifying what labs the school
+    (a) A manager object
+   (b) An object that makes decisions                   has
+         based on a state machine             9. What is the purpose of a stereotype in
+    (c) A decision-making object
+   (d) An object that decides which entity        class structuring?
+         object to interact with                  (a) To label a class according to its
+
+5. How would you determine a boundary                   class structuring criterion
+   class from the context diagram?                (b) To identify the objects that belong
+    (a) By looking at it
+   (b) By selecting the external classes on             to the same class
+         the context diagram                      (c) To distinguish between external
+    (c) By determining the software clas-
+         ses that communicate with the                  objects and software objects
+         external classes                         (d) To identify the association bet-
+   (d) By drawing the boundary between
+         the hardware and software clas-                ween two classes
+         ses                                 10. What is a business logic object?
+
+6. What is a timer object?                        (a) An object used in business applica-
+    (a) An external clock                               tions
+
+                                                  (b) An object that defines business-
+                                                        specific application logic
+
+                                                  (c) The internal logic of an object
+                                                  (d) A business object that determines
+
+                                                        whether a client request is logical
+     9
+
+     Dynamic Interaction Modeling
+
+         Dynamic modeling provides a view of a system in which control and sequencing are
+         considered, either within an object (by means of a finite state machine) or between
+         objects (by analysis of object interactions). This chapter addresses dynamic interac-
+         tion between objects.
+
+             Dynamic interaction modeling is based on the realization of the use cases devel-
+         oped during use case modeling. For each use case, it is necessary to determine how
+         the objects that participate in the use case dynamically interact with each other.
+         The object structuring criteria described in Chapter 8 are applied to determine the
+         objects that participate in each use case. This chapter describes how, for each use
+         case, an interaction diagram is developed to depict the objects that participate in
+         the use case and the sequence of messages passed between them. The interaction
+         is depicted on either a communication diagram or a sequence diagram. A narrative
+         description of the object interaction is also provided in a message sequence descrip-
+         tion. Please note that all references to system in this chapter are to the software
+         system.
+
+             This chapter first describes object interaction modeling using communication
+         diagrams and sequence diagrams before describing how they are used in dynamic
+         interaction modeling. It then describes the details of the dynamic interaction model-
+         ing approach for determining how objects collaborate with each other. This chapter
+         describes stateless dynamic interaction modeling, also referred to as basic dynamic
+         interaction modeling. Chapter 11 describes state-dependent dynamic interaction
+         modeling, which, unlike stateless dynamic interaction modeling, involves state-
+         dependent communication controlled by a statechart.
+
+             Section 9.1 presents an overview of object interaction modeling and describes
+         the two kinds of interaction diagrams, communication and sequence diagrams.
+         Section 9.2 describes message sequence numbering on interaction diagrams. Sec-
+         tion 9.3 introduces dynamic interaction modeling, and Section 9.4 describes state-
+         less dynamic interaction modeling. Section 9.5 provides two examples of stateless
+         dynamic interaction modeling.
+
+132
+
