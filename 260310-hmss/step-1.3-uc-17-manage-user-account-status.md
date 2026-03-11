@@ -1,7 +1,7 @@
 # Use Case: Manage User Account Status
 
 ## Summary
-System Admin controls the status of a user account (enable, suspend, or disable) when the account violates policy or requires administrative restriction.
+System Admin changes a user account status by applying a status transition permitted for the account's current state and notifies the user of the change.
 
 ## Dependency
 - None
@@ -16,29 +16,30 @@ System Admin controls the status of a user account (enable, suspend, or disable)
 
 ## Description of main sequence
 1. System Admin accesses the user account administration function.
-2. System displays user accounts and available account-management actions.
+2. System displays user accounts and their current statuses.
 3. System Admin selects a user account to manage.
-4. System displays the current account information and status.
-5. System Admin selects the desired status-management action (Enable / Suspend / Disable).
-6. System validates that the selected action is permitted under current business rules.
-7. System Admin confirms the action.
-8. System updates the user account status.
-9. System instructs Email Provider to notify the user of the status change.
-10. System informs the System Admin that the account-management action has been applied successfully.
+4. System displays the current account information and the status-management actions permitted for the selected account's current status.
+5. System Admin selects a permitted status-management action.
+6. System updates the user account status according to the selected action.
+7. System sends notification to the user about the status change.
+8. System informs the System Admin that the account-management action has been applied successfully.
 
 ## Description of alternative sequences
-- **Step 6: Selected action is not permitted under current business rules**
+- **Step 4: No status-management action is available for the selected account**
+  - 4.1: System informs the System Admin that no further status change is available for the selected account.
+  - Use case ends unsuccessfully.
+- **Step 6: Selected action is no longer permitted under the current account status**
   - 6.1: System informs the System Admin that the action cannot be completed.
   - Use case ends unsuccessfully.
-- **Step 9: Email Provider unavailable**
-  - 9.1: System records the notification as failed but the account status update still succeeds.
-  - Continues to Step 10.
+- **Step 7: Email Provider unavailable**
+  - 7.1: System records the notification as failed but the account status update still succeeds.
+  - Continues to Step 8.
 
 ## Nonfunctional Requirements
-- **Security:** Account-management actions must be traceable and applied consistently. Disabled accounts must not retain unauthorized access.
+- **Security:** Account-management actions must be traceable and applied consistently. Suspended or disabled accounts must not retain unauthorized access.
 
 ## Postcondition
-User account status is updated. A disabled or suspended account cannot access protected system functions.
+User account status is updated according to the permitted transition. A suspended or disabled account cannot access protected system functions.
 
 ## Outstanding questions
-- The final list of account status values (enabled, suspended, disabled) will be confirmed later.
+- None at this stage.

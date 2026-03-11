@@ -1,7 +1,7 @@
 # Use Case: Control Listing Visibility
 
 ## Summary
-System Admin disables a suspicious or policy-violating listing from public search to protect platform integrity.
+System Admin applies the Disable action to a suspicious or policy-violating publicly visible listing so that it is removed from public search and the Owner is notified.
 
 ## Dependency
 - None
@@ -18,23 +18,23 @@ System Admin disables a suspicious or policy-violating listing from public searc
 1. System Admin accesses the listing administration function.
 2. System displays publicly visible listings with their associated information.
 3. System Admin selects a listing to review.
-4. System displays the listing details and available control actions.
+4. System displays the listing details and the Disable control action.
 5. System Admin selects the Disable action for the listing.
-6. System Admin confirms the disable action.
-7. System removes the listing from public search results.
-8. System instructs Email Provider to notify the Owner that the listing has been disabled.
-9. System informs the System Admin that the listing has been disabled successfully.
+6. System confirms the listing-control action.
+7. System removes the listing from public search.
+8. System sends notification to the Owner that the listing has been disabled by admin action.
+9. System informs the System Admin that the listing-control action has been applied successfully.
 
 ## Description of alternative sequences
 - **Step 8: Email Provider unavailable**
-  - 8.1: System records the notification as failed but the listing is still disabled.
+  - 8.1: System records the notification as failed but the listing-control action still succeeds.
   - Continues to Step 9.
 
 ## Nonfunctional Requirements
-- **Security:** Admin listing control must be traceable and applied immediately to protect platform users.
+- **Security:** Admin listing-control actions must be traceable and applied immediately to protect platform users.
 
 ## Postcondition
-The listing is removed from public search and no longer visible to visitors or tenants.
+The listing is removed from public search and is no longer visible to visitors or tenants.
 
 ## Outstanding questions
-- Whether a disabled listing can be re-enabled by admin or owner, and under what conditions, will be finalized later.
+- None at this stage.

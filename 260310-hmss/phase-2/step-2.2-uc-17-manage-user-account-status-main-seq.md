@@ -1,8 +1,8 @@
-# Communication Diagram: UC-17 Manage User Account Status — Main Sequence
+# Communication Diagram: UC-17 Manage User Account Status - Main Sequence
 
 ## Object Layout
 
-```
+```text
 System Admin --- AdminUI --- AdminCoordinator --- UserManagementLogic --- User
                                   |--- NotificationService
                                   |--- EmailProxy --- Email Provider
@@ -23,39 +23,40 @@ System Admin --- AdminUI --- AdminCoordinator --- UserManagementLogic --- User
 
 ## Messages
 
-| # | From → To | Message |
+| # | From -> To | Message |
 |---|---|---|
-| 1 | System Admin → AdminUI | access user account administration |
-| 1.1 | AdminUI → AdminCoordinator | request user list |
-| 1.2 | AdminCoordinator → UserManagementLogic | get user accounts |
-| 1.3 | UserManagementLogic → User | fetch user accounts |
-| 1.4 | UserManagementLogic → AdminCoordinator | user accounts list |
-| 1.5 | AdminCoordinator → AdminUI | user accounts + available actions |
-| 1.6 | AdminUI → System Admin | display user accounts |
-| 2 | System Admin → AdminUI | select user account |
-| 2.1 | AdminUI → AdminCoordinator | user selected (user id) |
-| 2.2 | AdminCoordinator → UserManagementLogic | get account details |
-| 2.3 | UserManagementLogic → User | fetch account info |
-| 2.4 | UserManagementLogic → AdminCoordinator | account info + current status + available actions |
-| 2.5 | AdminCoordinator → AdminUI | account info + status actions (Enable / Suspend / Disable) |
-| 2.6 | AdminUI → System Admin | display account info and status actions |
-| 3 | System Admin → AdminUI | select status action (e.g., Suspend) |
-| 3.1 | AdminUI → AdminCoordinator | status action (Suspend, user id) |
-| 3.2 | AdminCoordinator → UserManagementLogic | validate and apply status change |
-| 3.3 | UserManagementLogic → User | check current status (action permitted?) |
-| 3.4 | User → UserManagementLogic | current status (valid transition) |
-| 3.5 | UserManagementLogic → User | update account status to Suspended |
-| 3.6 | UserManagementLogic → AdminCoordinator | status updated (user info) |
-| 3.7 | AdminCoordinator → NotificationService | compose user notification (status change event, user info) |
-| 3.8 | NotificationService → AdminCoordinator | notification content |
-| 3.9 | AdminCoordinator → EmailProxy | send notification (content, user email) |
-| 3.10 | EmailProxy → Email Provider | deliver email |
-| 3.11 | Email Provider → EmailProxy | delivery acknowledged |
-| 3.12 | EmailProxy → AdminCoordinator | email dispatched |
-| 3.13 | AdminCoordinator → AdminUI | account status updated successfully |
-| 3.14 | AdminUI → System Admin | display account-management action applied |
+| 1 | System Admin -> AdminUI | Account Management Access |
+| 1.1 | AdminUI -> AdminCoordinator | User Account List Request |
+| 1.2 | AdminCoordinator -> UserManagementLogic | User Account List Request |
+| 1.3 | UserManagementLogic -> User | User Account List Request |
+| 1.4 | User -> UserManagementLogic | User Account List |
+| 1.5 | UserManagementLogic -> AdminCoordinator | User Account List |
+| 1.6 | AdminCoordinator -> AdminUI | User Account List |
+| 1.7 | AdminUI -> System Admin | User Account List |
+| 2 | System Admin -> AdminUI | User Account Selection |
+| 2.1 | AdminUI -> AdminCoordinator | User Account Detail Request |
+| 2.2 | AdminCoordinator -> UserManagementLogic | User Account Detail Request |
+| 2.3 | UserManagementLogic -> User | User Account Detail Request |
+| 2.4 | User -> UserManagementLogic | User Account Detail and Available Status Actions |
+| 2.5 | UserManagementLogic -> AdminCoordinator | User Account Detail and Available Status Actions |
+| 2.6 | AdminCoordinator -> AdminUI | User Account Detail and Available Status Actions |
+| 2.7 | AdminUI -> System Admin | User Account Detail and Available Status Actions |
+| 3 | System Admin -> AdminUI | Account Status Change Decision |
+| 3.1 | AdminUI -> AdminCoordinator | Account Status Change Request |
+| 3.2 | AdminCoordinator -> UserManagementLogic | Account Status Change Request |
+| 3.3 | UserManagementLogic -> User | Account Status Transition |
+| 3.4 | User -> UserManagementLogic | Account Status Record |
+| 3.5 | UserManagementLogic -> AdminCoordinator | Account Status Change Result |
+| 3.6 | AdminCoordinator -> NotificationService | User Notification Request |
+| 3.7 | NotificationService -> AdminCoordinator | User Notification |
+| 3.8 | AdminCoordinator -> EmailProxy | User Notification |
+| 3.9 | EmailProxy -> Email Provider | User Notification |
+| 3.10 | Email Provider -> EmailProxy | Notification Delivery Result |
+| 3.11 | EmailProxy -> AdminCoordinator | Notification Delivery Result |
+| 3.12 | AdminCoordinator -> AdminUI | Account Status Change Outcome |
+| 3.13 | AdminUI -> System Admin | Account Status Change Confirmation |
 
 ## Notes
-- Main sequence shows Suspend action. Enable and Disable follow the same structure with different target status.
-
-Use `/drawio` to generate a visual .drawio file from this blueprint.
+- Main sequence shows one permitted status change path. The same structure applies to Enable, Suspend, or Disable when the selected account status allows that transition.
+- Disabled accounts have no outgoing transition in the current scope, so the system presents no further status-management action for them.
+- Messages are kept at analysis level and avoid method-style naming.
