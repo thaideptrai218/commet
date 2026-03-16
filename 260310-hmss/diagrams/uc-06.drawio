@@ -1,0 +1,233 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36 Edg/145.0.0.0" version="29.6.1">
+  <diagram name="UC-06 Cancel Rental Request - Main Sequence" id="X0Wlr9gbPqcFODCTBUP3">
+    <mxGraphModel grid="0" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="X4PNCwQIzI_rhx40fuee-1" parent="1" style="shape=umlActor;whiteSpace=wrap;html=1;fillColor=#82CAFA;strokeColor=#000000;verticalLabelPosition=bottom;verticalAlign=top;align=center;" value="Tenant" vertex="1">
+          <mxGeometry height="90" width="50" x="30" y="364" as="geometry" />
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#82CAFA;strokeColor=#000000;align=center;verticalAlign=middle;fontColor=#000000;" value="«user interaction»&lt;br/&gt;: RentalRequestUI" vertex="1">
+          <mxGeometry height="70" width="180" x="257" y="374" as="geometry" />
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#82CAFA;strokeColor=#000000;align=center;verticalAlign=middle;fontColor=#000000;" value="«coordinator»&lt;br/&gt;: RentalRequestCoordinator" vertex="1">
+          <mxGeometry height="70" width="200" x="627" y="374" as="geometry" />
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#82CAFA;strokeColor=#000000;align=center;verticalAlign=middle;fontColor=#000000;" value="«business logic»&lt;br/&gt;: RentalRequestRules" vertex="1">
+          <mxGeometry height="70" width="190" x="930" y="252" as="geometry" />
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#82CAFA;strokeColor=#000000;align=center;verticalAlign=middle;fontColor=#000000;" value="«entity»&lt;br/&gt;: RentalRequest" vertex="1">
+          <mxGeometry height="70" width="160" x="1395" y="252" as="geometry" />
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#82CAFA;strokeColor=#000000;align=center;verticalAlign=middle;fontColor=#000000;" value="«service»&lt;br/&gt;: NotificationService" vertex="1">
+          <mxGeometry height="70" width="190" x="632" y="604" as="geometry" />
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-7" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#82CAFA;strokeColor=#000000;align=center;verticalAlign=middle;fontColor=#000000;" value="«proxy»&lt;br/&gt;: EmailProxy" vertex="1">
+          <mxGeometry height="70" width="160" x="993" y="508" as="geometry" />
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-8" parent="1" style="shape=umlActor;whiteSpace=wrap;html=1;fillColor=#82CAFA;strokeColor=#000000;verticalLabelPosition=bottom;verticalAlign=top;align=center;" value="Email Provider" vertex="1">
+          <mxGeometry height="90" width="60" x="1344" y="498" as="geometry" />
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-9" edge="1" parent="1" source="X4PNCwQIzI_rhx40fuee-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;startArrow=none;strokeColor=#000000;" target="X4PNCwQIzI_rhx40fuee-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-10" edge="1" parent="1" source="X4PNCwQIzI_rhx40fuee-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;startArrow=none;strokeColor=#000000;" target="X4PNCwQIzI_rhx40fuee-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-11" edge="1" parent="1" source="X4PNCwQIzI_rhx40fuee-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;startArrow=none;strokeColor=#000000;" target="X4PNCwQIzI_rhx40fuee-4">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="729" y="290" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-12" edge="1" parent="1" source="X4PNCwQIzI_rhx40fuee-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;startArrow=none;strokeColor=#000000;" target="X4PNCwQIzI_rhx40fuee-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-13" edge="1" parent="1" source="X4PNCwQIzI_rhx40fuee-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;startArrow=none;strokeColor=#000000;" target="X4PNCwQIzI_rhx40fuee-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-14" edge="1" parent="1" source="X4PNCwQIzI_rhx40fuee-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;startArrow=none;strokeColor=#000000;" target="X4PNCwQIzI_rhx40fuee-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-15" edge="1" parent="1" source="X4PNCwQIzI_rhx40fuee-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;startArrow=none;strokeColor=#000000;" target="X4PNCwQIzI_rhx40fuee-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-16" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#000000;" value="1: Request Management Access" vertex="1">
+          <mxGeometry height="24" width="150" x="98" y="296" as="geometry" />
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-17" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=classic;startArrow=none;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="160" y="396" as="sourcePoint" />
+            <mxPoint x="200" y="396" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-18" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#000000;" value="1.1: Rental Request List Request" vertex="1">
+          <mxGeometry height="24" width="210" x="445" y="353" as="geometry" />
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-19" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=classic;startArrow=none;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="499" y="400" as="sourcePoint" />
+            <mxPoint x="539" y="400" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-20" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#000000;" value="1.2: Rental Request List Request" vertex="1">
+          <mxGeometry height="24" width="210" x="726" y="221" as="geometry" />
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-21" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=classic;startArrow=none;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="782" y="278" as="sourcePoint" />
+            <mxPoint x="822" y="278" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-22" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#000000;" value="1.3: Rental Request List Request" vertex="1">
+          <mxGeometry height="24" width="220" x="1158" y="185" as="geometry" />
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-23" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=classic;startArrow=none;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1233" y="272" as="sourcePoint" />
+            <mxPoint x="1273" y="272" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-24" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#000000;" value="1.4: Rental Request List" vertex="1">
+          <mxGeometry height="24" width="170" x="1158" y="310" as="geometry" />
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-25" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=classic;startArrow=none;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1275" y="303" as="sourcePoint" />
+            <mxPoint x="1235" y="303" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-26" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#000000;" value="1.5: Rental Request List" vertex="1">
+          <mxGeometry height="24" width="170" x="739" y="313" as="geometry" />
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-27" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=classic;startArrow=none;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="827" y="303" as="sourcePoint" />
+            <mxPoint x="787" y="303" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-28" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#000000;" value="1.6: Rental Request List" vertex="1">
+          <mxGeometry height="24" width="180" x="445" y="424" as="geometry" />
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-29" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=classic;startArrow=none;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="540" y="424" as="sourcePoint" />
+            <mxPoint x="500" y="424" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-30" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#000000;" value="1.7: Rental Request List" vertex="1">
+          <mxGeometry height="24" width="180" x="103" y="434" as="geometry" />
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-31" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=classic;startArrow=none;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="198" y="425" as="sourcePoint" />
+            <mxPoint x="158" y="425" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-32" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#000000;" value="2: Cancellation Selection" vertex="1">
+          <mxGeometry height="24" width="180" x="98" y="326" as="geometry" />
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-34" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#000000;" value="2.1: Cancellation Confirmation" vertex="1">
+          <mxGeometry height="24" width="190" x="103" y="460" as="geometry" />
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-36" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#000000;" value="3: Cancellation Confirmation" vertex="1">
+          <mxGeometry height="24" width="190" x="98" y="353" as="geometry" />
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-38" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#000000;" value="3.1: Cancellation Request" vertex="1">
+          <mxGeometry height="24" width="180" x="447" y="374" as="geometry" />
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-39" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=classic;startArrow=none;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="706" y="500" as="sourcePoint" />
+            <mxPoint x="706" y="552" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-40" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#000000;" value="3.2: Cancellation Request" vertex="1">
+          <mxGeometry height="24" width="180" x="726" y="245" as="geometry" />
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-41" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=classic;startArrow=none;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="746" y="555" as="sourcePoint" />
+            <mxPoint x="746" y="499" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-42" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#000000;" value="3.3: Cancellation Eligibility Check" vertex="1">
+          <mxGeometry height="24" width="220" x="1158" y="209" as="geometry" />
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-44" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#000000;" value="3.4: Cancellation Eligibility Result" vertex="1">
+          <mxGeometry height="24" width="220" x="1158" y="337" as="geometry" />
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-45" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=classic;startArrow=none;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1098" y="376.6" as="sourcePoint" />
+            <mxPoint x="1058" y="376.6" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-46" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#000000;" value="3.5: Cancellation Record" vertex="1">
+          <mxGeometry height="24" width="170" x="1158" y="233" as="geometry" />
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-47" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=classic;startArrow=none;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="933" y="398" as="sourcePoint" />
+            <mxPoint x="973" y="398" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-48" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#000000;" value="3.6: Cancellation Record" vertex="1">
+          <mxGeometry height="24" width="170" x="1158" y="364" as="geometry" />
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-49" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=classic;startArrow=none;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1212" y="443" as="sourcePoint" />
+            <mxPoint x="1172" y="443" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-50" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#000000;" value="3.7: Cancellation Result" vertex="1">
+          <mxGeometry height="24" width="170" x="739" y="337" as="geometry" />
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-51" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=classic;startArrow=none;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="973" y="424" as="sourcePoint" />
+            <mxPoint x="933" y="424" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-52" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#000000;" value="3.8: Owner Notification Request" vertex="1">
+          <mxGeometry height="24" width="153" x="576" y="514" as="geometry" />
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-54" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#000000;" value="3.9: Owner Notification" vertex="1">
+          <mxGeometry height="24" width="170" x="751" y="512" as="geometry" />
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-56" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#000000;" value="3.10: Owner Notification" vertex="1">
+          <mxGeometry height="24" width="170" x="886" y="369" as="geometry" />
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-58" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#000000;" value="3.11: Owner Notification" vertex="1">
+          <mxGeometry height="24" width="170" x="1179" y="495" as="geometry" />
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-59" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=classic;startArrow=none;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1225" y="530" as="sourcePoint" />
+            <mxPoint x="1265" y="530" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-60" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#000000;" value="3.12: Notification Delivery Result" vertex="1">
+          <mxGeometry height="24" width="166" x="1178" y="568" as="geometry" />
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-61" edge="1" parent="1" style="edgeStyle=none;rounded=0;html=1;endArrow=classic;startArrow=none;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1263" y="558" as="sourcePoint" />
+            <mxPoint x="1223" y="558" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-62" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#000000;" value="3.13: Notification Delivery Result" vertex="1">
+          <mxGeometry height="24" width="151" x="886" y="439" as="geometry" />
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-64" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#000000;" value="3.14: Cancellation Outcome" vertex="1">
+          <mxGeometry height="24" width="180" x="445" y="454" as="geometry" />
+        </mxCell>
+        <mxCell id="X4PNCwQIzI_rhx40fuee-66" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;fontColor=#000000;" value="3.15: Cancellation Confirmation" vertex="1">
+          <mxGeometry height="24" width="210" x="103" y="488" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
